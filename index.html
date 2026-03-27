@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NB2 Prompt Forge — Alix</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root[data-theme="dark"] {
+    --bg: #0e0e0e;
+    --bg2: #161616;
+    --bg3: #1f1f1f;
+    --border: rgba(212,164,55,0.2);
+    --border-hot: #d4a437;
+    --gold: #d4a437;
+    --gold-dim: rgba(212,164,55,0.08);
+    --gold-glow: rgba(212,164,55,0.25);
+    --text: #fbfbfb;
+    --text-dim: rgba(251,251,251,0.45);
+    --text-muted: rgba(251,251,251,0.25);
+    --card: #131313;
+    --inset: #0a0a0a;
+    --success: #3ddc97;
+    --tag-bg: rgba(212,164,55,0.12);
+    --scrollbar: #2a2a2a;
+  }
+  :root[data-theme="light"] {
+    --bg: #fbfbfb;
+    --bg2: #f3f0e8;
+    --bg3: #ede8d8;
+    --border: rgba(212,164,55,0.3);
+    --border-hot: #d4a437;
+    --gold: #c4941f;
+    --gold-dim: rgba(212,164,55,0.1);
+    --gold-glow: rgba(212,164,55,0.3);
+    --text: #0e0e0e;
+    --text-dim: rgba(14,14,14,0.5);
+    --text-muted: rgba(14,14,14,0.3);
+    --card: #fff;
+    --inset: #f0ece0;
+    --success: #1a8a5a;
+    --tag-bg: rgba(212,164,55,0.15);
+    --scrollbar: #d4c89a;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background 0.35s, color 0.35s;
+  }
+
+  /* GRAIN OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* GRID PATTERN */
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    opacity: 0.4;
+  }
+
+  /* TOPBAR */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    height: 64px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+  }
+
+  .logo-group {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .logo-mark {
+    width: 36px;
+    height: 36px;
+    border: 2px solid var(--gold);
+    display: grid;
+    place-items: center;
+    transform: rotate(45deg);
+    flex-shrink: 0;
+    transition: box-shadow 0.3s;
+  }
+
+  .logo-group:hover .logo-mark {
+    box-shadow: 0 0 18px var(--gold-glow);
+  }
+
+  .logo-mark span {
+    transform: rotate(-45deg);
+    font-family: 'Bebas Neue', cursive;
+    font-size: 18px;
+    color: var(--gold);
+    letter-spacing: 0;
+  }
+
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+
+  .logo-text strong {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: var(--text);
+  }
+
+  .logo-text small {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .badge-nb2 {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 4px 10px;
+    text-transform: uppercase;
+    background: var(--gold-dim);
+  }
+
+  .theme-toggle {
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    color: var(--text);
+    font-size: 16px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--gold);
+    background: var(--gold-dim);
+  }
+
+  /* HERO */
+  .hero {
+    padding: 72px 32px 48px;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(52px, 8vw, 110px);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    color: var(--text);
+    margin-bottom: 28px;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--gold);
+    -webkit-text-stroke: 0px;
+  }
+
+  .hero-sub {
+    font-size: 15px;
+    color: var(--text-dim);
+    max-width: 520px;
+    line-height: 1.7;
+    font-weight: 400;
+  }
+
+  /* DIVIDER */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, var(--gold) 0%, transparent 60%);
+    margin: 0 32px;
+    width: calc(100% - 64px);
+    max-width: calc(1100px - 64px);
+    margin: 0 auto 48px;
+  }
+
+  /* MAIN LAYOUT */
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 32px 80px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  @media (max-width: 800px) {
+    .main { grid-template-columns: 1fr; }
+    .hero { padding: 48px 20px 32px; }
+    .topbar { padding: 0 20px; }
+    .main { padding: 0 20px 60px; }
+  }
+
+  /* PANELS */
+  .panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--gold);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .panel:focus-within::before,
+  .panel.active::before { opacity: 1; }
+
+  .panel-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .panel-label .dot {
+    width: 6px;
+    height: 6px;
+    background: var(--gold);
+    border-radius: 0;
+    display: inline-block;
+  }
+
+  /* INPUT AREA */
+  .input-panel { grid-column: 1 / -1; }
+
+  .prompt-input {
+    width: 100%;
+    background: var(--inset);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    padding: 18px 20px;
+    resize: none;
+    min-height: 140px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .prompt-input::placeholder { color: var(--text-muted); }
+  .prompt-input:focus { border-color: var(--gold); }
+
+  .input-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .char-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  /* STYLE TAGS */
+  .style-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .style-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    padding: 5px 12px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    user-select: none;
+  }
+
+  .style-tag:hover, .style-tag.active {
+    background: var(--gold-dim);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  /* OPTIMIZE BUTTON */
+  .btn-optimize {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 36px;
+    background: var(--gold);
+    color: #0e0e0e;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 18px;
+    letter-spacing: 2px;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .btn-optimize::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.15);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .btn-optimize:hover::after { opacity: 1; }
+  .btn-optimize:active { transform: scale(0.98); }
+
+  .btn-optimize:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn-optimize .spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(0,0,0,0.3);
+    border-top-color: #000;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+
+  .btn-optimize.loading .spinner { display: block; }
+  .btn-optimize.loading .btn-text { opacity: 0.7; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* OUTPUT PANELS */
+  .json-output {
+    background: var(--inset);
+    border: 1px solid var(--border);
+    padding: 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.8;
+    color: var(--text);
+    min-height: 320px;
+    overflow: auto;
+    max-height: 420px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    transition: border-color 0.3s;
+    position: relative;
+  }
+
+  .json-output::-webkit-scrollbar { width: 4px; }
+  .json-output::-webkit-scrollbar-track { background: transparent; }
+  .json-output::-webkit-scrollbar-thumb { background: var(--scrollbar); }
+
+  /* JSON Syntax Highlighting */
+  .json-key { color: var(--gold); }
+  .json-string { color: #a8d8a8; }
+  .json-number { color: #f0a0a0; }
+  .json-bool { color: #80b0ff; }
+  .json-null { color: var(--text-muted); }
+
+  [data-theme="light"] .json-string { color: #2a7a2a; }
+  [data-theme="light"] .json-number { color: #aa2222; }
+  [data-theme="light"] .json-bool { color: #2244aa; }
+
+  .placeholder-hint {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    pointer-events: none;
+  }
+
+  .placeholder-hint .ph-icon {
+    font-size: 36px;
+    opacity: 0.2;
+  }
+
+  .placeholder-hint p {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  /* COPY BUTTON */
+  .panel-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 14px;
+  }
+
+  .btn-copy {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 7px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-copy:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: var(--gold-dim);
+  }
+
+  .btn-copy.copied {
+    border-color: var(--success);
+    color: var(--success);
+  }
+
+  /* SCORE BADGE */
+  .score-badge {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 28px;
+    color: var(--gold);
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+
+  .score-badge span {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+  }
+
+  /* FIELD CARDS */
+  .fields-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 320px;
+    max-height: 420px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  .fields-grid::-webkit-scrollbar { width: 3px; }
+  .fields-grid::-webkit-scrollbar-thumb { background: var(--scrollbar); }
+
+  .field-card {
+    background: var(--inset);
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 10px;
+    align-items: start;
+    animation: slideIn 0.3s ease both;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .field-key {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    padding-top: 2px;
+    word-break: break-all;
+  }
+
+  .field-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.6;
+    word-break: break-word;
+  }
+
+  .field-val.is-array {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .arr-item {
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  /* STATS ROW */
+  .stats-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .stat-item {
+    flex: 1;
+    min-width: 80px;
+    background: var(--inset);
+    border: 1px solid var(--border);
+    padding: 12px;
+    text-align: center;
+  }
+
+  .stat-val {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 24px;
+    color: var(--gold);
+    display: block;
+  }
+
+  .stat-lbl {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    display: block;
+    margin-top: 2px;
+  }
+
+  /* ERROR */
+  .error-msg {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: #ff6b6b;
+    background: rgba(255,107,107,0.08);
+    border: 1px solid rgba(255,107,107,0.2);
+    padding: 14px 16px;
+    margin-top: 12px;
+    display: none;
+    line-height: 1.6;
+  }
+
+  /* FOOTER */
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 28px 32px;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: gap;
+    gap: 16px;
+  }
+
+  .footer-left {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    line-height: 1.8;
+  }
+
+  .footer-left a {
+    color: var(--gold);
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+
+  .footer-left a:hover { opacity: 0.75; }
+
+  .footer-mark {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 36px;
+    color: var(--border);
+    letter-spacing: 3px;
+    line-height: 1;
+    transition: color 0.3s;
+  }
+
+  .footer:hover .footer-mark { color: var(--gold); }
+
+  /* PULSE ANIMATION */
+  @keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  .loading-dots::after {
+    content: '';
+    animation: dots 1.2s steps(4, end) infinite;
+  }
+
+  @keyframes dots {
+    0%   { content: ''; }
+    25%  { content: '.'; }
+    50%  { content: '..'; }
+    75%  { content: '...'; }
+  }
+
+  /* GLOW LINE */
+  .glow-line {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, var(--gold) 50%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.5s;
+    margin-bottom: 0;
+  }
+
+  .glow-line.show { opacity: 1; animation: glowPulse 2s ease-in-out infinite; }
+
+  @keyframes glowPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  /* NB2 INDICATOR */
+  .nb2-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .nb2-tag .led {
+    width: 6px;
+    height: 6px;
+    background: var(--success);
+    border-radius: 50%;
+    animation: pulse 2s ease infinite;
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <a href="https://alixbc.com.ng" target="_blank" rel="noopener" class="logo-group">
+    <div class="logo-mark"><span>A</span></div>
+    <div class="logo-text">
+      <strong>ALIX</strong>
+      <small>Engineering Marketplace</small>
+    </div>
+  </a>
+  <div class="topbar-right">
+    <div class="badge-nb2">Nano Banana 2</div>
+    <button class="theme-toggle" id="themeToggle" title="Toggle theme">🌙</button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">Prompt Engineering Tool</div>
+  <h1>NB2<br>Prompt<br><em>Forge</em></h1>
+  <p class="hero-sub">Transform rough ideas into precision-engineered JSON prompts for Nano Banana 2. Built for engineers who demand structured, repeatable outputs.</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- INPUT PANEL -->
+  <div class="panel input-panel" id="inputPanel">
+    <div class="panel-label"><span class="dot"></span> Raw Prompt Input</div>
+
+    <textarea
+      class="prompt-input"
+      id="promptInput"
+      placeholder="Describe your image concept... e.g. 'a futuristic marketplace at night with glowing neon signs, engineering equipment, Nigerian street vendors'"
+      maxlength="1000"
+      rows="6"
+    ></textarea>
+
+    <div style="margin-top: 14px;">
+      <div class="panel-label" style="margin-bottom: 10px;"><span class="dot"></span> Style Modifier</div>
+      <div class="style-tags" id="styleTags">
+        <span class="style-tag active" data-style="photorealistic">Photorealistic</span>
+        <span class="style-tag" data-style="cinematic">Cinematic</span>
+        <span class="style-tag" data-style="illustration">Illustration</span>
+        <span class="style-tag" data-style="concept art">Concept Art</span>
+        <span class="style-tag" data-style="3D render">3D Render</span>
+        <span class="style-tag" data-style="editorial">Editorial</span>
+        <span class="style-tag" data-style="brutalist">Brutalist</span>
+        <span class="style-tag" data-style="anime">Anime</span>
+      </div>
+    </div>
+
+    <div class="input-footer">
+      <div>
+        <div class="char-count" id="charCount">0 / 1000</div>
+        <div class="nb2-tag" style="margin-top: 6px;"><span class="led"></span> NB2 model active</div>
+      </div>
+      <button class="btn-optimize" id="optimizeBtn">
+        <div class="spinner"></div>
+        <span class="btn-text">⚡ Optimize Prompt</span>
+      </button>
+    </div>
+
+    <div class="error-msg" id="errorMsg"></div>
+  </div>
+
+  <!-- JSON OUTPUT -->
+  <div class="panel" id="jsonPanel">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 16px;">
+      <div class="panel-label" style="margin-bottom:0;"><span class="dot"></span> JSON Output</div>
+      <div id="scoreDisplay" style="display:none;">
+        <div class="score-badge" id="scoreVal">—<span>/ 100</span></div>
+      </div>
+    </div>
+
+    <div class="json-output" id="jsonOutput">
+      <div class="placeholder-hint" id="jsonPlaceholder">
+        <div class="ph-icon">{ }</div>
+        <p>Optimized JSON will<br>appear here</p>
+      </div>
+    </div>
+
+    <div class="panel-actions">
+      <button class="btn-copy" id="copyJsonBtn" onclick="copyJson()">
+        <span>⎘</span> Copy JSON
+      </button>
+      <div class="glow-line" id="glowLine" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- FIELDS VIEW -->
+  <div class="panel" id="fieldsPanel">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 16px;">
+      <div class="panel-label" style="margin-bottom:0;"><span class="dot"></span> Parsed Fields</div>
+      <button class="btn-copy" id="copyFullBtn" onclick="copyFull()">
+        <span>⎘</span> Copy Prompt
+      </button>
+    </div>
+
+    <div id="statsRow" class="stats-row" style="display:none;"></div>
+
+    <div class="fields-grid" id="fieldsGrid">
+      <div class="placeholder-hint" style="position:relative; min-height:280px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;">
+        <div class="ph-icon" style="font-size:32px; opacity:0.2;">⊞</div>
+        <p class="nb2-tag">Field breakdown appears here</p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer style="border-top: 1px solid var(--border); padding: 28px 32px; max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+  <div class="footer-left">
+    <div>Powered by <strong style="color: var(--gold);">Claude AI</strong> · Optimized for Nano Banana 2</div>
+    <div style="margin-top: 4px;">A product of <a href="https://alixbc.com.ng" target="_blank">alixbc.com.ng</a> — Nigeria's Engineering Marketplace</div>
+  </div>
+  <div class="footer-mark">ALIX</div>
+</footer>
+
+<script>
+  // ── THEME TOGGLE ──────────────────────────────────────────────
+  const themeToggle = document.getElementById('themeToggle');
+  let isDark = true;
+
+  themeToggle.addEventListener('click', () => {
+    isDark = !isDark;
+    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    themeToggle.textContent = isDark ? '🌙' : '☀️';
+  });
+
+  // ── STYLE TAGS ─────────────────────────────────────────────────
+  let selectedStyle = 'photorealistic';
+  document.querySelectorAll('.style-tag').forEach(tag => {
+    tag.addEventListener('click', () => {
+      document.querySelectorAll('.style-tag').forEach(t => t.classList.remove('active'));
+      tag.classList.add('active');
+      selectedStyle = tag.dataset.style;
+    });
+  });
+
+  // ── CHAR COUNT ─────────────────────────────────────────────────
+  const promptInput = document.getElementById('promptInput');
+  const charCount = document.getElementById('charCount');
+  promptInput.addEventListener('input', () => {
+    charCount.textContent = `${promptInput.value.length} / 1000`;
+  });
+
+  // ── STATE ──────────────────────────────────────────────────────
+  let lastJson = null;
+  let lastOptimized = '';
+
+  // ── OPTIMIZE ───────────────────────────────────────────────────
+  const optimizeBtn = document.getElementById('optimizeBtn');
+
+  optimizeBtn.addEventListener('click', async () => {
+    const raw = promptInput.value.trim();
+    if (!raw) {
+      showError('Please enter a prompt to optimize.');
+      return;
+    }
+
+    setLoading(true);
+    hideError();
+
+    const systemPrompt = `You are an expert text-to-image prompt engineer specializing in Nano Banana 2 (NB2), a high-fidelity diffusion model. Your job is to transform a raw user idea into a precision-optimized NB2 prompt in strict JSON format.
+
+Respond ONLY with valid JSON — no markdown, no backticks, no preamble, no explanation.
+
+The JSON must have exactly these fields:
+{
+  "prompt": "highly detailed optimized positive prompt string",
+  "negative_prompt": "things to avoid, artifacts, bad quality etc.",
+  "style": "artistic style string",
+  "aspect_ratio": "16:9 | 1:1 | 9:16 | 4:3 | 3:2",
+  "quality_tags": ["tag1", "tag2", "tag3"],
+  "lighting": "lighting description",
+  "camera": "camera/lens details",
+  "color_grade": "color grading style",
+  "mood": "overall mood and atmosphere",
+  "cfg_scale": 7.5,
+  "steps": 30,
+  "seed": null,
+  "score": 87,
+  "optimized_prompt": "the single fully assembled prompt string ready to paste into NB2"
+}
+
+Rules:
+- "prompt" must be rich, comma-separated, highly descriptive
+- "negative_prompt" must address NB2-specific artifacts
+- "score" is your quality confidence score (0-100)
+- "cfg_scale" between 5-12, "steps" between 20-50
+- Make it NB2-optimal: NB2 responds best to booru-style tags mixed with natural language
+- The style must match: ${selectedStyle}`;
+
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: systemPrompt,
+          messages: [{ role: 'user', content: `Optimize this prompt for Nano Banana 2 with style "${selectedStyle}":\n\n${raw}` }]
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.error) throw new Error(data.error.message || 'API error');
+
+      const text = data.content.map(c => c.text || '').join('');
+      const clean = text.replace(/```json|```/g, '').trim();
+      const parsed = JSON.parse(clean);
+
+      lastJson = parsed;
+      lastOptimized = parsed.optimized_prompt || parsed.prompt || '';
+
+      renderJson(parsed);
+      renderFields(parsed);
+
+    } catch (err) {
+      console.error(err);
+      showError(`Error: ${err.message}. Check your connection or try again.`);
+    } finally {
+      setLoading(false);
+    }
+  });
+
+  // ── RENDER JSON ────────────────────────────────────────────────
+  function renderJson(obj) {
+    const placeholder = document.getElementById('jsonPlaceholder');
+    if (placeholder) placeholder.style.display = 'none';
+
+    const jsonStr = JSON.stringify(obj, null, 2);
+    const highlighted = syntaxHighlight(jsonStr);
+    document.getElementById('jsonOutput').innerHTML = highlighted;
+
+    // Score
+    if (obj.score) {
+      document.getElementById('scoreDisplay').style.display = 'flex';
+      document.getElementById('scoreVal').innerHTML = `${obj.score}<span>/ 100</span>`;
+    }
+  }
+
+  function syntaxHighlight(json) {
+    return json
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"([^"]+)":/g, '<span class="json-key">"$1"</span>:')
+      .replace(/: "([^"]*)"/g, ': <span class="json-string">"$1"</span>')
+      .replace(/: (\d+\.?\d*)/g, ': <span class="json-number">$1</span>')
+      .replace(/: (true|false)/g, ': <span class="json-bool">$1</span>')
+      .replace(/: null/g, ': <span class="json-null">null</span>');
+  }
+
+  // ── RENDER FIELDS ──────────────────────────────────────────────
+  function renderFields(obj) {
+    const grid = document.getElementById('fieldsGrid');
+    const statsRow = document.getElementById('statsRow');
+
+    // Stats
+    statsRow.style.display = 'flex';
+    statsRow.innerHTML = `
+      <div class="stat-item"><span class="stat-val">${obj.cfg_scale || '—'}</span><span class="stat-lbl">CFG Scale</span></div>
+      <div class="stat-item"><span class="stat-val">${obj.steps || '—'}</span><span class="stat-lbl">Steps</span></div>
+      <div class="stat-item"><span class="stat-val">${obj.aspect_ratio || '—'}</span><span class="stat-lbl">Ratio</span></div>
+      <div class="stat-item"><span class="stat-val">${obj.score || '—'}</span><span class="stat-lbl">Score</span></div>
+    `;
+
+    const skip = ['cfg_scale', 'steps', 'seed', 'score', 'aspect_ratio'];
+    grid.innerHTML = '';
+
+    Object.entries(obj).forEach(([key, val], i) => {
+      if (skip.includes(key)) return;
+      const card = document.createElement('div');
+      card.className = 'field-card';
+      card.style.animationDelay = `${i * 0.04}s`;
+
+      let valHtml;
+      if (Array.isArray(val)) {
+        valHtml = `<div class="field-val is-array">${val.map(v => `<span class="arr-item">${v}</span>`).join('')}</div>`;
+      } else if (val === null) {
+        valHtml = `<div class="field-val" style="color:var(--text-muted);">null</div>`;
+      } else {
+        valHtml = `<div class="field-val">${escapeHtml(String(val))}</div>`;
+      }
+
+      card.innerHTML = `<div class="field-key">${key}</div>${valHtml}`;
+      grid.appendChild(card);
+    });
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // ── COPY ───────────────────────────────────────────────────────
+  function copyJson() {
+    if (!lastJson) return;
+    navigator.clipboard.writeText(JSON.stringify(lastJson, null, 2));
+    flashCopy('copyJsonBtn');
+  }
+
+  function copyFull() {
+    if (!lastOptimized) return;
+    navigator.clipboard.writeText(lastOptimized);
+    flashCopy('copyFullBtn');
+  }
+
+  function flashCopy(id) {
+    const btn = document.getElementById(id);
+    btn.classList.add('copied');
+    btn.innerHTML = '<span>✓</span> Copied!';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = id === 'copyJsonBtn' ? '<span>⎘</span> Copy JSON' : '<span>⎘</span> Copy Prompt';
+    }, 2000);
+  }
+
+  // ── UTILS ──────────────────────────────────────────────────────
+  function setLoading(on) {
+    optimizeBtn.disabled = on;
+    optimizeBtn.classList.toggle('loading', on);
+    const btnText = optimizeBtn.querySelector('.btn-text');
+    btnText.textContent = on ? 'Optimizing' : '⚡ Optimize Prompt';
+    if (on) btnText.classList.add('loading-dots');
+    else btnText.classList.remove('loading-dots');
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('errorMsg');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+
+  function hideError() {
+    document.getElementById('errorMsg').style.display = 'none';
+  }
+</script>
+</body>
+</html>
