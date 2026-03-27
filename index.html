@@ -7,79 +7,82 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
   :root[data-theme="dark"] {
-    --bg: #0e0e0e;
-    --bg2: #161616;
-    --bg3: #1f1f1f;
-    --border: rgba(212,164,55,0.2);
+    --bg: #0a0a0a;
+    --bg2: #141414;
+    --bg3: #1a1a1a;
+    --border: rgba(212,164,55,0.15);
     --border-hot: #d4a437;
     --gold: #d4a437;
     --gold-dim: rgba(212,164,55,0.08);
-    --gold-glow: rgba(212,164,55,0.25);
-    --text: #fbfbfb;
-    --text-dim: rgba(251,251,251,0.45);
-    --text-muted: rgba(251,251,251,0.25);
-    --card: #131313;
-    --inset: #0a0a0a;
-    --success: #3ddc97;
-    --tag-bg: rgba(212,164,55,0.12);
-    --scrollbar: #2a2a2a;
+    --gold-glow: rgba(212,164,55,0.2);
+    --text: #f8f8f8;
+    --text-dim: rgba(248,248,248,0.6);
+    --text-muted: rgba(248,248,248,0.35);
+    --card: #111111;
+    --inset: #050505;
+    --success: #2ecc71;
+    --tag-bg: rgba(212,164,55,0.1);
+    --premium: #ff6b35;
+    --premium-glow: rgba(255,107,53,0.3);
   }
   :root[data-theme="light"] {
-    --bg: #fbfbfb;
-    --bg2: #f3f0e8;
-    --bg3: #ede8d8;
-    --border: rgba(212,164,55,0.3);
-    --border-hot: #d4a437;
+    --bg: #fafafa;
+    --bg2: #f0f0f0;
+    --bg3: #e8e8e8;
+    --border: rgba(212,164,55,0.25);
+    --border-hot: #c4941f;
     --gold: #c4941f;
-    --gold-dim: rgba(212,164,55,0.1);
-    --gold-glow: rgba(212,164,55,0.3);
-    --text: #0e0e0e;
-    --text-dim: rgba(14,14,14,0.5);
-    --text-muted: rgba(14,14,14,0.3);
-    --card: #fff;
-    --inset: #f0ece0;
-    --success: #1a8a5a;
-    --tag-bg: rgba(212,164,55,0.15);
-    --scrollbar: #d4c89a;
+    --gold-dim: rgba(196,148,31,0.1);
+    --gold-glow: rgba(196,148,31,0.3);
+    --text: #1a1a1a;
+    --text-dim: rgba(26,26,26,0.65);
+    --text-muted: rgba(26,26,26,0.4);
+    --card: #ffffff;
+    --inset: #f5f5f5;
+    --success: #27ae60;
+    --tag-bg: rgba(196,148,31,0.12);
+    --premium: #e85d04;
+    --premium-glow: rgba(232,93,4,0.2);
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   html { scroll-behavior: smooth; }
-
+  
   body {
     font-family: 'Syne', sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
     overflow-x: hidden;
-    transition: background 0.35s, color 0.35s;
+    line-height: 1.6;
   }
 
-  /* GRAIN OVERLAY */
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    background-image: 
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    opacity: 0.3;
+    animation: gridMove 20s linear infinite;
+  }
+
+  @keyframes gridMove {
+    0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+    100% { transform: perspective(500px) rotateX(60deg) translateY(40px); }
+  }
+
   body::before {
     content: '';
     position: fixed;
     inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
-    opacity: 0.6;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
     pointer-events: none;
     z-index: 9999;
   }
 
-  /* GRID PATTERN */
-  .grid-bg {
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(var(--border) 1px, transparent 1px),
-      linear-gradient(90deg, var(--border) 1px, transparent 1px);
-    background-size: 60px 60px;
-    pointer-events: none;
-    opacity: 0.4;
-  }
-
-  /* TOPBAR */
   .topbar {
     position: sticky;
     top: 0;
@@ -88,164 +91,144 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 32px;
-    height: 64px;
-    background: var(--bg);
+    height: 70px;
+    background: rgba(10,10,10,0.8);
+    backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border);
-    backdrop-filter: blur(12px);
   }
 
   .logo-group {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 16px;
     text-decoration: none;
     color: inherit;
   }
 
-  .logo-mark {
-    width: 36px;
-    height: 36px;
-    border: 2px solid var(--gold);
-    display: grid;
-    place-items: center;
-    transform: rotate(45deg);
-    flex-shrink: 0;
-    transition: box-shadow 0.3s;
+  .logo-img {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
   }
 
-  .logo-group:hover .logo-mark {
-    box-shadow: 0 0 18px var(--gold-glow);
-  }
-
-  .logo-mark span {
-    transform: rotate(-45deg);
-    font-family: 'Bebas Neue', cursive;
-    font-size: 18px;
-    color: var(--gold);
-    letter-spacing: 0;
-  }
-
-  .logo-text {
-    display: flex;
-    flex-direction: column;
-    line-height: 1;
-  }
-
-  .logo-text strong {
-    font-family: 'Bebas Neue', cursive;
-    font-size: 22px;
-    letter-spacing: 2px;
-    color: var(--text);
-  }
-
-  .logo-text small {
+  .badge-premium {
     font-family: 'DM Mono', monospace;
     font-size: 9px;
-    color: var(--gold);
     letter-spacing: 3px;
+    color: var(--premium);
+    border: 1px solid var(--premium);
+    padding: 4px 12px;
     text-transform: uppercase;
-    margin-top: 2px;
+    background: rgba(255,107,53,0.1);
+    position: relative;
+    overflow: hidden;
   }
 
-  .topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 16px;
+  .badge-premium::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, var(--premium-glow), transparent);
+    animation: shimmer 3s infinite;
   }
 
-  .badge-nb2 {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: var(--gold);
-    border: 1px solid var(--gold);
-    padding: 4px 10px;
-    text-transform: uppercase;
-    background: var(--gold-dim);
+  @keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
   }
 
   .theme-toggle {
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
     border: 1px solid var(--border);
-    background: var(--bg2);
+    background: transparent;
     cursor: pointer;
     display: grid;
     place-items: center;
     color: var(--text);
-    font-size: 16px;
-    transition: border-color 0.2s, background 0.2s;
+    font-size: 18px;
+    transition: all 0.3s;
   }
 
   .theme-toggle:hover {
     border-color: var(--gold);
-    background: var(--gold-dim);
+    box-shadow: 0 0 20px var(--gold-glow);
   }
 
-  /* HERO */
   .hero {
-    padding: 72px 32px 48px;
-    max-width: 1100px;
+    padding: 80px 32px 60px;
+    max-width: 1200px;
     margin: 0 auto;
+    text-align: center;
     position: relative;
   }
 
-  .hero-eyebrow {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 4px;
-    color: var(--gold);
-    text-transform: uppercase;
-    margin-bottom: 20px;
-    display: flex;
+  .hero-badge {
+    display: inline-flex;
     align-items: center;
-    gap: 12px;
-  }
-
-  .hero-eyebrow::before {
-    content: '';
-    width: 32px;
-    height: 1px;
-    background: var(--gold);
+    gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--premium);
+    border: 1px solid var(--premium);
+    padding: 6px 16px;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
   }
 
   .hero h1 {
     font-family: 'Bebas Neue', cursive;
-    font-size: clamp(52px, 8vw, 110px);
-    line-height: 0.9;
-    letter-spacing: 2px;
-    color: var(--text);
-    margin-bottom: 28px;
-  }
-
-  .hero h1 em {
-    font-style: normal;
-    color: var(--gold);
-    -webkit-text-stroke: 0px;
+    font-size: clamp(48px, 10vw, 120px);
+    line-height: 0.85;
+    letter-spacing: 4px;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, var(--text) 0%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   .hero-sub {
-    font-size: 15px;
+    font-size: 16px;
     color: var(--text-dim);
-    max-width: 520px;
-    line-height: 1.7;
-    font-weight: 400;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.8;
   }
 
-  /* DIVIDER */
-  .divider {
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(90deg, var(--gold) 0%, transparent 60%);
-    margin: 0 32px;
-    width: calc(100% - 64px);
-    max-width: calc(1100px - 64px);
-    margin: 0 auto 48px;
+  .premium-bar {
+    max-width: 1200px;
+    margin: 0 auto 40px;
+    padding: 0 32px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
   }
 
-  /* MAIN LAYOUT */
-  .main {
-    max-width: 1100px;
+  .premium-feature {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .premium-feature::before {
+    content: '◆';
+    color: var(--premium);
+    font-size: 14px;
+  }
+
+  .workspace {
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 32px 80px;
     display: grid;
@@ -253,531 +236,367 @@
     gap: 24px;
   }
 
-  @media (max-width: 800px) {
-    .main { grid-template-columns: 1fr; }
-    .hero { padding: 48px 20px 32px; }
-    .topbar { padding: 0 20px; }
-    .main { padding: 0 20px 60px; }
+  @media (max-width: 900px) {
+    .workspace { grid-template-columns: 1fr; }
   }
 
-  /* PANELS */
   .panel {
     background: var(--card);
     border: 1px solid var(--border);
-    padding: 28px;
+    padding: 32px;
     position: relative;
-    overflow: hidden;
-    transition: border-color 0.3s;
   }
 
   .panel::before {
     content: '';
     position: absolute;
-    top: 0; left: 0;
-    width: 3px;
-    height: 100%;
-    background: var(--gold);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--premium), var(--gold), var(--premium));
     opacity: 0;
     transition: opacity 0.3s;
   }
 
-  .panel:focus-within::before,
-  .panel.active::before { opacity: 1; }
+  .panel:focus-within::before {
+    opacity: 1;
+  }
 
-  .panel-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 3px;
-    color: var(--gold);
-    text-transform: uppercase;
-    margin-bottom: 16px;
+  .panel-header {
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
   }
 
-  .panel-label .dot {
-    width: 6px;
-    height: 6px;
-    background: var(--gold);
-    border-radius: 0;
-    display: inline-block;
+  .panel-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 20px;
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 
-  /* INPUT AREA */
-  .input-panel { grid-column: 1 / -1; }
+  .panel-title::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: var(--premium);
+    transform: rotate(45deg);
+  }
 
-  .prompt-input {
+  .input-section {
+    grid-column: 1 / -1;
+  }
+
+  .input-meta {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .meta-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .meta-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+  }
+
+  select, .styled-select {
+    background: var(--inset);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    padding: 10px 14px;
+    min-width: 150px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  select:hover, select:focus {
+    border-color: var(--gold);
+  }
+
+  textarea.premium-input {
     width: 100%;
     background: var(--inset);
     border: 1px solid var(--border);
     color: var(--text);
     font-family: 'Syne', sans-serif;
-    font-size: 15px;
-    line-height: 1.7;
-    padding: 18px 20px;
+    font-size: 16px;
+    line-height: 1.8;
+    padding: 24px;
     resize: none;
-    min-height: 140px;
+    min-height: 160px;
     outline: none;
-    transition: border-color 0.2s;
+    transition: all 0.3s;
   }
 
-  .prompt-input::placeholder { color: var(--text-muted); }
-  .prompt-input:focus { border-color: var(--gold); }
+  textarea.premium-input:focus {
+    border-color: var(--premium);
+    box-shadow: 0 0 30px var(--premium-glow);
+  }
 
-  .input-footer {
+  .input-stats {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
     margin-top: 16px;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-
-  .char-count {
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
     font-family: 'DM Mono', monospace;
     font-size: 11px;
     color: var(--text-muted);
   }
 
-  /* STYLE TAGS */
-  .style-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 16px;
-  }
-
-  .style-tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 1px;
-    color: var(--text-dim);
-    background: var(--tag-bg);
-    border: 1px solid var(--border);
-    padding: 5px 12px;
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: all 0.2s;
-    user-select: none;
-  }
-
-  .style-tag:hover, .style-tag.active {
-    background: var(--gold-dim);
-    border-color: var(--gold);
-    color: var(--gold);
-  }
-
-  /* OPTIMIZE BUTTON */
-  .btn-optimize {
+  .complexity-indicator {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 14px 36px;
-    background: var(--gold);
-    color: #0e0e0e;
-    font-family: 'Bebas Neue', cursive;
-    font-size: 18px;
-    letter-spacing: 2px;
+    gap: 8px;
+  }
+
+  .complexity-bar {
+    width: 100px;
+    height: 4px;
+    background: var(--inset);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .complexity-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--premium), var(--gold));
+    width: 0%;
+    transition: width 0.5s;
+  }
+
+  .enhance-btn {
+    width: 100%;
+    margin-top: 24px;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--premium), #ff8c42);
     border: none;
+    color: #fff;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 24px;
+    letter-spacing: 4px;
     cursor: pointer;
     position: relative;
     overflow: hidden;
-    transition: all 0.2s;
-    white-space: nowrap;
+    transition: transform 0.2s, box-shadow 0.3s;
   }
 
-  .btn-optimize::after {
+  .enhance-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 40px var(--premium-glow);
+  }
+
+  .enhance-btn:active {
+    transform: translateY(0);
+  }
+
+  .enhance-btn.processing {
+    pointer-events: none;
+    opacity: 0.8;
+  }
+
+  .enhance-btn .btn-text {
+    position: relative;
+    z-index: 1;
+  }
+
+  .enhance-btn::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(255,255,255,0.15);
-    opacity: 0;
-    transition: opacity 0.2s;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
   }
 
-  .btn-optimize:hover::after { opacity: 1; }
-  .btn-optimize:active { transform: scale(0.98); }
-
-  .btn-optimize:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+  .enhance-btn:hover::before {
+    transform: translateX(100%);
   }
 
-  .btn-optimize .spinner {
-    width: 16px;
-    height: 16px;
-    border: 2px solid rgba(0,0,0,0.3);
-    border-top-color: #000;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    display: none;
+  .output-panel {
+    min-height: 500px;
   }
 
-  .btn-optimize.loading .spinner { display: block; }
-  .btn-optimize.loading .btn-text { opacity: 0.7; }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* OUTPUT PANELS */
   .json-output {
     background: var(--inset);
     border: 1px solid var(--border);
-    padding: 20px;
+    padding: 24px;
     font-family: 'DM Mono', monospace;
-    font-size: 12.5px;
-    line-height: 1.8;
-    color: var(--text);
-    min-height: 320px;
+    font-size: 13px;
+    line-height: 2;
+    min-height: 400px;
+    max-height: 500px;
     overflow: auto;
-    max-height: 420px;
-    white-space: pre-wrap;
-    word-break: break-word;
-    transition: border-color 0.3s;
     position: relative;
   }
 
-  .json-output::-webkit-scrollbar { width: 4px; }
-  .json-output::-webkit-scrollbar-track { background: transparent; }
-  .json-output::-webkit-scrollbar-thumb { background: var(--scrollbar); }
+  .json-key { color: var(--premium); font-weight: bold; }
+  .json-string { color: #7ee787; }
+  .json-number { color: #fca5a5; }
+  .json-bool { color: #93c5fd; }
 
-  /* JSON Syntax Highlighting */
-  .json-key { color: var(--gold); }
-  .json-string { color: #a8d8a8; }
-  .json-number { color: #f0a0a0; }
-  .json-bool { color: #80b0ff; }
-  .json-null { color: var(--text-muted); }
+  [data-theme="light"] .json-string { color: #166534; }
+  [data-theme="light"] .json-number { color: #991b1b; }
+  [data-theme="light"] .json-bool { color: #1e40af; }
 
-  [data-theme="light"] .json-string { color: #2a7a2a; }
-  [data-theme="light"] .json-number { color: #aa2222; }
-  [data-theme="light"] .json-bool { color: #2244aa; }
+  .analysis-grid {
+    display: grid;
+    gap: 12px;
+  }
 
-  .placeholder-hint {
+  .analysis-item {
+    background: var(--inset);
+    border-left: 3px solid var(--gold);
+    padding: 16px;
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 16px;
+    align-items: start;
+    animation: slideIn 0.4s ease both;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .analysis-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--gold);
+    font-weight: bold;
+  }
+
+  .analysis-content {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .detail-tag {
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+
+  .score-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid var(--border);
+    display: grid;
+    place-items: center;
+    position: relative;
+    margin-left: auto;
+  }
+
+  .score-circle::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: var(--premium);
+    transform: rotate(var(--score-rotation));
+    transition: transform 1s ease;
+  }
+
+  .score-value {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 32px;
+    color: var(--premium);
+  }
+
+  .score-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    position: absolute;
+    bottom: 12px;
+  }
+
+  .placeholder-state {
     position: absolute;
     inset: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 16px;
-    pointer-events: none;
-  }
-
-  .placeholder-hint .ph-icon {
-    font-size: 36px;
-    opacity: 0.2;
-  }
-
-  .placeholder-hint p {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 2px;
+    gap: 20px;
     color: var(--text-muted);
-    text-transform: uppercase;
     text-align: center;
+    padding: 40px;
   }
 
-  /* COPY BUTTON */
-  .panel-actions {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 14px;
-  }
-
-  .btn-copy {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    background: transparent;
-    border: 1px solid var(--border);
-    padding: 7px 16px;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .btn-copy:hover {
-    border-color: var(--gold);
-    color: var(--gold);
-    background: var(--gold-dim);
-  }
-
-  .btn-copy.copied {
-    border-color: var(--success);
-    color: var(--success);
-  }
-
-  /* SCORE BADGE */
-  .score-badge {
-    font-family: 'Bebas Neue', cursive;
-    font-size: 28px;
-    color: var(--gold);
-    display: flex;
-    align-items: baseline;
-    gap: 4px;
-  }
-
-  .score-badge span {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--text-muted);
-    letter-spacing: 1px;
-  }
-
-  /* FIELD CARDS */
-  .fields-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    min-height: 320px;
-    max-height: 420px;
-    overflow-y: auto;
-    padding-right: 4px;
-  }
-
-  .fields-grid::-webkit-scrollbar { width: 3px; }
-  .fields-grid::-webkit-scrollbar-thumb { background: var(--scrollbar); }
-
-  .field-card {
-    background: var(--inset);
-    border: 1px solid var(--border);
-    padding: 12px 14px;
+  .placeholder-icon {
+    width: 80px;
+    height: 80px;
+    border: 2px dashed var(--border);
+    border-radius: 50%;
     display: grid;
-    grid-template-columns: 130px 1fr;
-    gap: 10px;
-    align-items: start;
-    animation: slideIn 0.3s ease both;
+    place-items: center;
+    font-size: 32px;
+    opacity: 0.5;
   }
 
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .field-key {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 1.5px;
-    color: var(--gold);
-    text-transform: uppercase;
-    padding-top: 2px;
-    word-break: break-all;
-  }
-
-  .field-val {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    color: var(--text);
-    line-height: 1.6;
-    word-break: break-word;
-  }
-
-  .field-val.is-array {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-  }
-
-  .arr-item {
-    background: var(--tag-bg);
-    border: 1px solid var(--border);
-    padding: 2px 8px;
-    font-size: 11px;
-    color: var(--text-dim);
-  }
-
-  /* STATS ROW */
-  .stats-row {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-  }
-
-  .stat-item {
-    flex: 1;
-    min-width: 80px;
-    background: var(--inset);
-    border: 1px solid var(--border);
-    padding: 12px;
-    text-align: center;
-  }
-
-  .stat-val {
-    font-family: 'Bebas Neue', cursive;
-    font-size: 24px;
-    color: var(--gold);
-    display: block;
-  }
-
-  .stat-lbl {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 2px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    display: block;
-    margin-top: 2px;
-  }
-
-  /* ERROR */
-  .error-msg {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    color: #ff6b6b;
-    background: rgba(255,107,107,0.08);
-    border: 1px solid rgba(255,107,107,0.2);
-    padding: 14px 16px;
-    margin-top: 12px;
-    display: none;
-    line-height: 1.6;
-  }
-
-  /* FOOTER */
-  .footer {
+  /* Newsletter Section - Styled like the image */
+  .newsletter-section {
     border-top: 1px solid var(--border);
-    padding: 28px 32px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg2);
+    padding: 60px 32px;
+  }
+
+  .newsletter-content {
     max-width: 1100px;
     margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: gap;
-    gap: 16px;
+    flex-wrap: wrap;
+    gap: 40px;
   }
 
-  .footer-left {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: var(--text-muted);
-    letter-spacing: 1px;
-    line-height: 1.8;
+  .newsletter-text {
+    flex: 1;
+    min-width: 300px;
   }
 
-  .footer-left a {
-    color: var(--gold);
-    text-decoration: none;
-    transition: opacity 0.2s;
-  }
-
-  .footer-left a:hover { opacity: 0.75; }
-
-  .footer-mark {
-    font-family: 'Bebas Neue', cursive;
-    font-size: 36px;
-    color: var(--border);
-    letter-spacing: 3px;
-    line-height: 1;
-    transition: color 0.3s;
-  }
-
-  .footer:hover .footer-mark { color: var(--gold); }
-
-  /* PULSE ANIMATION */
-  @keyframes pulse {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 1; }
-  }
-
-  .loading-dots::after {
-    content: '';
-    animation: dots 1.2s steps(4, end) infinite;
-  }
-
-  @keyframes dots {
-    0%   { content: ''; }
-    25%  { content: '.'; }
-    50%  { content: '..'; }
-    75%  { content: '...'; }
-  }
-
-  /* GLOW LINE */
-  .glow-line {
-    height: 1px;
-    background: linear-gradient(90deg, transparent 0%, var(--gold) 50%, transparent 100%);
-    opacity: 0;
-    transition: opacity 0.5s;
-    margin-bottom: 0;
-  }
-
-  .glow-line.show { opacity: 1; animation: glowPulse 2s ease-in-out infinite; }
-
-  @keyframes glowPulse {
-    0%, 100% { opacity: 0.4; }
-    50% { opacity: 1; }
-  }
-
-  /* NB2 INDICATOR */
-  .nb2-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 1px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-  }
-
-  .nb2-tag .led {
-    width: 6px;
-    height: 6px;
-    background: var(--success);
-    border-radius: 50%;
-    animation: pulse 2s ease infinite;
-  }
-
-  /* NEWSLETTER POPUP */
-  .nl-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.6);
-    backdrop-filter: blur(4px);
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.4s ease;
-  }
-  .nl-overlay.visible {
-    opacity: 1;
-    pointer-events: all;
-  }
-  .nl-box {
-    background: var(--bg2);
-    border: 1px solid var(--border-hot);
-    max-width: 440px;
-    width: calc(100% - 40px);
-    padding: 40px 36px 36px;
-    position: relative;
-    box-shadow: 0 0 60px rgba(212,164,55,0.15);
-    transform: translateY(20px);
-    transition: transform 0.4s ease;
-  }
-  .nl-overlay.visible .nl-box {
-    transform: translateY(0);
-  }
-  .nl-close {
-    position: absolute;
-    top: 14px;
-    right: 16px;
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    font-size: 20px;
-    cursor: pointer;
-    line-height: 1;
-    transition: color 0.2s;
-  }
-  .nl-close:hover { color: var(--gold); }
-  .nl-eyebrow {
+  .newsletter-eyebrow {
     font-family: 'DM Mono', monospace;
     font-size: 9px;
     letter-spacing: 3px;
@@ -786,95 +605,166 @@
     margin-bottom: 12px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
   }
-  .nl-eyebrow::before {
+
+  .newsletter-eyebrow::before {
     content: '';
-    width: 20px;
+    width: 24px;
     height: 1px;
     background: var(--gold);
   }
-  .nl-title {
+
+  .newsletter-heading {
     font-family: 'Bebas Neue', cursive;
-    font-size: 32px;
-    line-height: 1.1;
+    font-size: clamp(32px, 5vw, 48px);
+    letter-spacing: 2px;
     color: var(--text);
-    margin-bottom: 10px;
-    letter-spacing: 1px;
+    line-height: 1;
+    margin-bottom: 8px;
   }
-  .nl-title em {
-    font-style: normal;
+
+  .newsletter-heading span {
     color: var(--gold);
   }
-  .nl-sub {
+
+  .newsletter-subtext {
     font-family: 'DM Mono', monospace;
     font-size: 11px;
     color: var(--text-dim);
-    line-height: 1.7;
-    margin-bottom: 26px;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.5px;
   }
-  .nl-field {
-    width: 100%;
+
+  .newsletter-form {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .newsletter-form input {
     background: var(--inset);
     border: 1px solid var(--border);
     color: var(--text);
+    padding: 12px 16px;
     font-family: 'DM Mono', monospace;
     font-size: 13px;
-    padding: 12px 14px;
+    width: 200px;
     outline: none;
-    margin-bottom: 10px;
     transition: border-color 0.2s;
   }
-  .nl-field::placeholder { color: var(--text-muted); }
-  .nl-field:focus { border-color: var(--gold); }
-  .nl-btn {
-    width: 100%;
+
+  .newsletter-form input:focus {
+    border-color: var(--gold);
+  }
+
+  .btn-subscribe {
     background: var(--gold);
-    color: #0e0e0e;
-    font-family: 'Bebas Neue', cursive;
-    font-size: 17px;
-    letter-spacing: 2px;
     border: none;
-    padding: 14px;
+    color: #0a0a0a;
+    padding: 12px 28px;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 16px;
+    letter-spacing: 2px;
     cursor: pointer;
-    margin-top: 4px;
-    transition: opacity 0.2s, transform 0.15s;
+    transition: all 0.3s;
+    height: 43px;
   }
-  .nl-btn:hover { opacity: 0.88; }
-  .nl-btn:active { transform: scale(0.98); }
-  .nl-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-  .nl-success {
-    display: none;
-    text-align: center;
-    padding: 20px 0 8px;
+
+  .btn-subscribe:hover {
+    opacity: 0.85;
+    transform: translateY(-1px);
   }
-  .nl-success-icon {
-    font-size: 36px;
-    margin-bottom: 12px;
-  }
+
   .nl-success-msg {
+    display: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--success);
+    letter-spacing: 1px;
+    margin-top: 10px;
+  }
+
+  .nl-error-msg {
+    display: none;
     font-family: 'DM Mono', monospace;
     font-size: 11px;
-    color: var(--success);
+    color: #ff6b6b;
+    margin-top: 8px;
+  }
+
+  .processing-overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--card);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    z-index: 10;
+  }
+
+  .processing-overlay.active {
+    display: flex;
+  }
+
+  .processing-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--premium);
     letter-spacing: 2px;
     text-transform: uppercase;
   }
-  .nl-error {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: #ff6b6b;
-    margin-top: 8px;
-    display: none;
-    letter-spacing: 1px;
+
+  .processing-steps {
+    display: flex;
+    gap: 8px;
   }
-  .nl-privacy {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    color: var(--text-muted);
+
+  .step-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--border);
+    animation: stepPulse 1.4s infinite;
+  }
+
+  .step-dot:nth-child(2) { animation-delay: 0.2s; }
+  .step-dot:nth-child(3) { animation-delay: 0.4s; }
+  .step-dot:nth-child(4) { animation-delay: 0.6s; }
+
+  @keyframes stepPulse {
+    0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
+    40% { transform: scale(1); opacity: 1; background: var(--premium); }
+  }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 32px;
     text-align: center;
-    margin-top: 14px;
-    letter-spacing: 1px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .footer-mark {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 48px;
+    color: var(--border);
+    margin-top: 20px;
+    letter-spacing: 8px;
+  }
+
+  @media (max-width: 768px) {
+    .topbar { padding: 0 20px; }
+    .hero { padding: 60px 20px 40px; }
+    .workspace { padding: 0 20px 60px; }
+    .panel { padding: 24px; }
+    .analysis-item { grid-template-columns: 1fr; gap: 8px; }
+    .newsletter-content { flex-direction: column; text-align: center; }
+    .newsletter-eyebrow { justify-content: center; }
+    .newsletter-form { width: 100%; justify-content: center; }
+    .newsletter-form input { width: 100%; }
   }
 </style>
 </head>
@@ -882,494 +772,742 @@
 
 <div class="grid-bg"></div>
 
-<!-- TOPBAR -->
 <header class="topbar">
   <a href="https://alixbc.com.ng" target="_blank" rel="noopener" class="logo-group">
-    <img src="https://res.cloudinary.com/dc2gwj09q/image/upload/f_auto,q_auto/Alix_Logo-removebg-preview_cfrxcx" alt="Alix Logo" style="height: 40px; width: auto; object-fit: contain;">
+    <img src="https://res.cloudinary.com/dc2gwj09q/image/upload/f_auto,q_auto/Alix_Logo-removebg-preview_cfrxcx" alt="Alix Logo" class="logo-img">
   </a>
-  <div class="topbar-right">
-    <div class="badge-nb2">Nano Banana 2</div>
-    <button class="theme-toggle" id="themeToggle" title="Toggle theme">🌙</button>
+  <div style="display: flex; align-items: center; gap: 16px;">
+    <div class="badge-premium">Premium Engine</div>
+    <button class="theme-toggle" id="themeToggle">🌙</button>
   </div>
 </header>
 
-<!-- HERO -->
 <section class="hero">
-  <div class="hero-eyebrow">Prompt Engineering Tool</div>
-  <h1>NB2<br>Prompt<br><em>Forge</em></h1>
+  <div class="hero-badge">NB2 Prompt Forge</div>
+  <h1>Prompt<br>Engine</h1>
   <p class="hero-sub">Transform rough ideas into precision-engineered JSON prompts for Nano Banana 2. Built for engineers who demand structured, repeatable outputs.</p>
 </section>
 
-<div class="divider"></div>
+<div class="premium-bar">
+  <div class="premium-feature">Semantic Analysis</div>
+  <div class="premium-feature">Contextual Expansion</div>
+  <div class="premium-feature">Technical Parameters</div>
+  <div class="premium-feature">Negative Engineering</div>
+</div>
 
-<!-- MAIN -->
-<main class="main">
+<main class="workspace">
 
-  <!-- INPUT PANEL -->
-  <div class="panel input-panel" id="inputPanel">
-    <div class="panel-label"><span class="dot"></span> Raw Prompt Input</div>
+  <div class="panel input-section">
+    <div class="panel-header">
+      <div class="panel-title">Input Configuration</div>
+    </div>
 
-    <textarea
-      class="prompt-input"
-      id="promptInput"
-      placeholder="Describe your image concept... e.g. 'a futuristic marketplace at night with glowing neon signs, engineering equipment, Nigerian street vendors'"
-      maxlength="1000"
-      rows="6"
+    <div class="input-meta">
+      <div class="meta-group">
+        <label class="meta-label">Primary Style</label>
+        <select id="primaryStyle">
+          <option value="photorealistic">Photorealistic</option>
+          <option value="cinematic">Cinematic</option>
+          <option value="cinematic_horror">Cinematic Horror</option>
+          <option value="fashion_editorial">Fashion Editorial</option>
+          <option value="architectural">Architectural</option>
+          <option value="anime">Anime/Manga</option>
+          <option value="concept_art">Concept Art</option>
+          <option value="oil_painting">Oil Painting</option>
+          <option value="cyberpunk">Cyberpunk</option>
+          <option value="vintage">Vintage/Retro</option>
+        </select>
+      </div>
+      
+      <div class="meta-group">
+        <label class="meta-label">Mood</label>
+        <select id="moodSelect">
+          <option value="neutral">Neutral</option>
+          <option value="epic">Epic/Grand</option>
+          <option value="mysterious">Mysterious</option>
+          <option value="melancholic">Melancholic</option>
+          <option value="energetic">Energetic</option>
+          <option value="serene">Serene</option>
+          <option value="dramatic">Dramatic</option>
+        </select>
+      </div>
+
+      <div class="meta-group">
+        <label class="meta-label">Aspect Ratio</label>
+        <select id="aspectRatio">
+          <option value="16:9">16:9 Cinematic</option>
+          <option value="3:2">3:2 Photo</option>
+          <option value="4:3">4:3 Standard</option>
+          <option value="1:1" selected>1:1 Square</option>
+          <option value="9:16">9:16 Portrait</option>
+          <option value="21:9">21:9 Ultrawide</option>
+        </select>
+      </div>
+    </div>
+
+    <textarea 
+      id="userInput" 
+      class="premium-input" 
+      placeholder="Describe your vision. Be specific about subject, environment, and mood.&#10;&#10;Example: 'A lone astronaut standing on a Martian cliff at sunset, overlooking a vast canyon system with dust storms in the distance'"
     ></textarea>
 
-    <div style="margin-top: 14px;">
-      <div class="panel-label" style="margin-bottom: 10px;"><span class="dot"></span> Style Modifier</div>
-      <div class="style-tags" id="styleTags">
-        <span class="style-tag active" data-style="photorealistic">Photorealistic</span>
-        <span class="style-tag" data-style="cinematic">Cinematic</span>
-        <span class="style-tag" data-style="illustration">Illustration</span>
-        <span class="style-tag" data-style="concept art">Concept Art</span>
-        <span class="style-tag" data-style="3D render">3D Render</span>
-        <span class="style-tag" data-style="editorial">Editorial</span>
-        <span class="style-tag" data-style="brutalist">Brutalist</span>
-        <span class="style-tag" data-style="anime">Anime</span>
+    <div class="input-stats">
+      <div class="complexity-indicator">
+        <span>Complexity:</span>
+        <div class="complexity-bar">
+          <div class="complexity-fill" id="complexityBar"></div>
+        </div>
+        <span id="complexityText">Basic</span>
       </div>
+      <span id="charCount">0 characters</span>
     </div>
 
-    <div class="input-footer">
-      <div>
-        <div class="char-count" id="charCount">0 / 1000</div>
-        <div class="nb2-tag" style="margin-top: 6px;"><span class="led"></span> NB2 model active</div>
-      </div>
-      <button class="btn-optimize" id="optimizeBtn">
-        <div class="spinner"></div>
-        <span class="btn-text">⚡ Optimize Prompt</span>
-      </button>
-    </div>
-
-    <div class="error-msg" id="errorMsg"></div>
+    <button class="enhance-btn" id="enhanceBtn">
+      <span class="btn-text">✦ ENHANCE PROMPT</span>
+    </button>
   </div>
 
-  <!-- JSON OUTPUT -->
-  <div class="panel" id="jsonPanel">
-    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 16px;">
-      <div class="panel-label" style="margin-bottom:0;"><span class="dot"></span> JSON Output</div>
-      <div id="scoreDisplay" style="display:none;">
-        <div class="score-badge" id="scoreVal">—<span>/ 100</span></div>
+  <div class="panel output-panel">
+    <div class="panel-header">
+      <div class="panel-title">NB2 Configuration</div>
+      <div class="score-circle" id="scoreCircle" style="display: none;">
+        <div class="score-value" id="scoreValue">--</div>
+        <div class="score-label">Score</div>
       </div>
     </div>
-
+    
     <div class="json-output" id="jsonOutput">
-      <div class="placeholder-hint" id="jsonPlaceholder">
-        <div class="ph-icon">{ }</div>
-        <p>Optimized JSON will<br>appear here</p>
+      <div class="placeholder-state" id="placeholder">
+        <div class="placeholder-icon">{}</div>
+        <div style="font-family: 'DM Mono'; font-size: 12px; letter-spacing: 2px; text-transform: uppercase;">
+          Enhanced output will appear here
+        </div>
+      </div>
+      <div class="processing-overlay" id="processingOverlay">
+        <div class="processing-steps">
+          <div class="step-dot"></div>
+          <div class="step-dot"></div>
+          <div class="step-dot"></div>
+          <div class="step-dot"></div>
+        </div>
+        <div class="processing-text">Engineering Prompt</div>
       </div>
     </div>
 
-    <div class="panel-actions">
-      <button class="btn-copy" id="copyJsonBtn" onclick="copyJson()">
-        <span>⎘</span> Copy JSON
-      </button>
-      <div class="glow-line" id="glowLine" style="display:none;"></div>
+    <div style="margin-top: 16px; display: flex; gap: 12px;">
+      <button class="btn-subscribe" onclick="copyJson()" style="flex: 1;">Copy JSON</button>
+      <button class="btn-subscribe" onclick="copyPrompt()" style="flex: 1; background: transparent; border: 1px solid var(--gold); color: var(--gold);">Copy Final Prompt</button>
     </div>
   </div>
 
-  <!-- FIELDS VIEW -->
-  <div class="panel" id="fieldsPanel">
-    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 16px;">
-      <div class="panel-label" style="margin-bottom:0;"><span class="dot"></span> Parsed Fields</div>
-      <button class="btn-copy" id="copyFullBtn" onclick="copyFull()">
-        <span>⎘</span> Copy Prompt
-      </button>
+  <div class="panel output-panel">
+    <div class="panel-header">
+      <div class="panel-title">Semantic Analysis</div>
     </div>
-
-    <div id="statsRow" class="stats-row" style="display:none;"></div>
-
-    <div class="fields-grid" id="fieldsGrid">
-      <div class="placeholder-hint" style="position:relative; min-height:280px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;">
-        <div class="ph-icon" style="font-size:32px; opacity:0.2;">⊞</div>
-        <p class="nb2-tag">Field breakdown appears here</p>
+    
+    <div class="analysis-grid" id="analysisGrid">
+      <div class="placeholder-state" style="position: relative;">
+        <div class="placeholder-icon">⊞</div>
+        <div style="font-family: 'DM Mono'; font-size: 12px; letter-spacing: 2px; text-transform: uppercase;">
+          Breakdown will appear here
+        </div>
       </div>
     </div>
   </div>
 
 </main>
 
-<!-- NEWSLETTER FOOTER STRIP -->
-<div style="border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--bg2);">
-  <div style="max-width: 1100px; margin: 0 auto; padding: 32px 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px;">
-    <div>
-      <div style="font-family:'DM Mono',monospace; font-size:9px; letter-spacing:3px; color:var(--gold); text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
-        <span style="display:inline-block; width:20px; height:1px; background:var(--gold);"></span>Weekly Newsletter
-      </div>
-      <div style="font-family:'Bebas Neue',cursive; font-size:26px; letter-spacing:1px; color:var(--text); line-height:1.1;">Get More <span style="color:var(--gold);">Value.</span></div>
-      <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--text-dim); margin-top:6px; letter-spacing:0.3px;">Subscribe to our weekly newsletter!</div>
+<section class="newsletter-section">
+  <div class="newsletter-content">
+    <div class="newsletter-text">
+      <div class="newsletter-eyebrow">Weekly Newsletter</div>
+      <div class="newsletter-heading">GET MORE <span>VALUE.</span></div>
+      <div class="newsletter-subtext">Subscribe to our weekly newsletter!</div>
     </div>
-    <div id="footerNlForm" style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-start;">
-      <div style="display:flex; flex-direction:column; gap:8px;">
-        <input id="footerNlName" type="text" placeholder="Your name" autocomplete="name"
-          style="background:var(--inset); border:1px solid var(--border); color:var(--text); font-family:'DM Mono',monospace; font-size:12px; padding:10px 14px; outline:none; width:180px; transition:border-color 0.2s;"
-          onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'">
-        <input id="footerNlEmail" type="email" placeholder="Your email address" autocomplete="email"
-          style="background:var(--inset); border:1px solid var(--border); color:var(--text); font-family:'DM Mono',monospace; font-size:12px; padding:10px 14px; outline:none; width:220px; transition:border-color 0.2s;"
-          onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'">
-      </div>
-      <div style="display:flex; flex-direction:column; gap:8px;">
-        <button id="footerNlBtn" onclick="submitFooterNewsletter()"
-          style="background:var(--gold); color:#0e0e0e; font-family:'Bebas Neue',cursive; font-size:16px; letter-spacing:2px; border:none; padding:10px 24px; cursor:pointer; height:38px; transition:opacity 0.2s;"
-          onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Subscribe →</button>
-        <div id="footerNlError" style="font-family:'DM Mono',monospace; font-size:9px; color:#ff6b6b; display:none; letter-spacing:1px;"></div>
-      </div>
-    </div>
-    <div id="footerNlSuccess" style="display:none; font-family:'DM Mono',monospace; font-size:11px; color:var(--success); letter-spacing:2px; text-transform:uppercase;">⚡ You're in. Welcome aboard.</div>
+    
+    <form class="newsletter-form" id="newsletterForm">
+      <input type="text" id="nlName" placeholder="Your name" required>
+      <input type="email" id="nlEmail" placeholder="Your email address" required>
+      <button type="submit" class="btn-subscribe" id="nlSubmit">Subscribe →</button>
+    </form>
+    <div class="nl-success-msg" id="nlSuccess">✓ You're in. Welcome aboard.</div>
+    <div class="nl-error-msg" id="nlError"></div>
   </div>
-</div>
+</section>
 
-<!-- FOOTER -->
-<footer style="border-top: 1px solid var(--border); padding: 28px 32px; max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
-  <div class="footer-left">
-    <div>Powered by <strong style="color: var(--gold);">Claude AI</strong> · Optimized for Nano Banana 2</div>
-    <div style="margin-top: 4px;">A product of <a href="https://alixbc.com.ng" target="_blank">alixbc.com.ng</a> — Nigeria's Engineering Marketplace</div>
-  </div>
+<footer>
+  <div>NB2 Prompt Forge Premium — A Product of Alix Engineering</div>
   <div class="footer-mark">ALIX</div>
 </footer>
 
 <script>
-  // ── THEME TOGGLE ──────────────────────────────────────────────
-  const themeToggle = document.getElementById('themeToggle');
-  let isDark = true;
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyDpc-NA-fbQRJzJe88phNmDwGcMy0kdw8HiRdHpWnG3RcNkOJDcvUXr7nV5wnBDpxC/exec';
 
-  themeToggle.addEventListener('click', () => {
-    isDark = !isDark;
-    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-    themeToggle.textContent = isDark ? '🌙' : '☀️';
-  });
+document.getElementById('newsletterForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const name = document.getElementById('nlName').value.trim();
+  const email = document.getElementById('nlEmail').value.trim();
+  const btn = document.getElementById('nlSubmit');
+  const success = document.getElementById('nlSuccess');
+  const error = document.getElementById('nlError');
+  
+  error.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+  
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = SCRIPT_URL;
+  form.target = 'hidden-iframe-nl';
+  form.style.display = 'none';
+  
+  const nameInput = document.createElement('input');
+  nameInput.name = 'name';
+  nameInput.value = name;
+  
+  const emailInput = document.createElement('input');
+  emailInput.name = 'email';
+  emailInput.value = email;
+  
+  form.appendChild(nameInput);
+  form.appendChild(emailInput);
+  document.body.appendChild(form);
+  
+  let iframe = document.getElementById('hidden-iframe-nl');
+  if (!iframe) {
+    iframe = document.createElement('iframe');
+    iframe.name = 'hidden-iframe-nl';
+    iframe.id = 'hidden-iframe-nl';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+  }
+  
+  iframe.onload = function() {
+    document.getElementById('newsletterForm').style.display = 'none';
+    success.style.display = 'block';
+    form.remove();
+  };
+  
+  form.submit();
+  
+  setTimeout(() => {
+    if (document.getElementById('newsletterForm').style.display !== 'none') {
+      document.getElementById('newsletterForm').style.display = 'none';
+      success.style.display = 'block';
+    }
+  }, 3000);
+});
 
-  // ── STYLE TAGS ─────────────────────────────────────────────────
-  let selectedStyle = 'photorealistic';
-  document.querySelectorAll('.style-tag').forEach(tag => {
-    tag.addEventListener('click', () => {
-      document.querySelectorAll('.style-tag').forEach(t => t.classList.remove('active'));
-      tag.classList.add('active');
-      selectedStyle = tag.dataset.style;
-    });
-  });
+const PremiumEngine = {
+  styles: {
+    photorealistic: {
+      signature: 'photorealistic, hyperrealistic, unreal engine 5, octane render',
+      camera: {
+        portrait: '85mm f/1.4 lens, f/2.0, shallow depth of field, bokeh background',
+        landscape: '24mm f/1.4 lens, f/8, deep focus, sharp foreground to background',
+        macro: '100mm macro lens, f/11, 1:1 magnification, extreme detail',
+        street: '35mm f/1.4 lens, f/5.6, documentary style',
+        default: '50mm f/1.2 lens, f/4, professional photography'
+      },
+      lighting: {
+        golden: 'golden hour lighting, warm tones, long shadows, rim lighting',
+        studio: 'studio lighting, three-point lighting, softboxes, catchlights in eyes',
+        natural: 'natural diffused daylight, overcast sky, soft shadows, no harsh highlights',
+        dramatic: 'chiaroscuro lighting, high contrast, deep shadows, selective illumination',
+        default: 'professional lighting, balanced exposure, subtle shadows'
+      },
+      texture: '8k resolution, subsurface scattering, realistic skin pores, micro-details',
+      color: 'sRGB color space, realistic color grading, true-to-life tones',
+      negative: 'painting, drawing, illustration, cartoon, anime, 3d render, cgi, artificial, deformed, blurry, low quality, oversaturated, overexposed'
+    },
+    cinematic: {
+      signature: 'cinematic film still, anamorphic lens, 35mm film grain, movie color grading',
+      camera: 'ARRI Alexa 65, anamorphic 50mm lens, T2.0, 2.39:1 aspect ratio, shallow depth of field',
+      lighting: 'cinematic lighting, volumetric fog, dramatic key light, atmospheric haze, lens flare',
+      texture: 'Kodak Vision3 500T film stock, subtle grain, cinematic contrast',
+      color: 'teal and orange color grading, cinematic LUT, crushed blacks, lifted shadows',
+      composition: 'rule of thirds, cinematic composition, lead room, headroom',
+      negative: 'amateur, home video, flat lighting, video game screenshot, soap opera effect, smooth motion'
+    },
+    cinematic_horror: {
+      signature: 'cinematic horror, dark atmosphere, unsettling mood, film grain',
+      camera: 'low angle shot, dutch angle, unstable framing, handheld camera movement',
+      lighting: 'low key lighting, harsh shadows, underlit, single source lighting, darkness',
+      color: 'desaturated colors, crushed blacks, lifted blacks, sickly green tint, cold color temperature',
+      mood: 'suspenseful, ominous, dread, atmospheric tension',
+      negative: 'bright, cheerful, well-lit, colorful, happy, comedy, daylight'
+    },
+    fashion_editorial: {
+      signature: 'high fashion editorial, haute couture, Vogue style, professional styling',
+      camera: 'medium format Hasselblad H6D, 100mm lens, f/11, perfect focus, high-end retouching',
+      lighting: 'beauty lighting, butterfly lighting, clamshell setup, pristine skin tones',
+      texture: 'perfect skin texture, poreless finish, high fashion makeup, designer clothing texture',
+      color: 'clean editorial color grade, high key, pristine whites, luxury aesthetic',
+      negative: 'casual, candid, street style, amateur, unposed, low fashion, wrinkles, imperfections'
+    },
+    architectural: {
+      signature: 'architectural photography, geometric precision, lines and symmetry',
+      camera: 'tilt-shift lens, 24mm TS-E, perspective correction, f/11, sharp throughout',
+      lighting: 'golden hour side lighting, long shadows emphasizing form, clear sky',
+      composition: 'leading lines, symmetrical composition, perfect verticals, geometric patterns',
+      negative: 'people, clutter, distorted perspective, wide angle distortion, tilted horizons'
+    },
+    anime: {
+      signature: 'masterpiece, best quality, studio ghibli style, detailed anime art',
+      camera: 'anime perspective, dynamic camera angle, detailed background art',
+      lighting: 'soft cel shading, ambient occlusion, anime lighting style, rim light',
+      color: 'vibrant anime colors, cel shaded palette, sakuga quality, detailed color work',
+      texture: 'clean lines, crisp edges, detailed line art, professional inking',
+      negative: 'photorealistic, 3d render, western cartoon, blurry, lowres, bad anatomy, deformed, 3d, cgi'
+    },
+    concept_art: {
+      signature: 'epic concept art, artstation trending, cgsociety, professional game art',
+      camera: 'epic wide angle, environmental scale, dramatic perspective, aerial view',
+      lighting: 'dramatic environmental lighting, god rays, atmospheric perspective, volumetric lighting',
+      mood: 'epic scale, adventurous, fantastical, immersive world-building',
+      texture: 'digital painting, detailed brushwork, textured surfaces, material definition',
+      negative: 'photograph, flat lighting, amateur, photobash, low detail, noisy'
+    },
+    oil_painting: {
+      signature: 'oil on canvas, masterwork, museum quality, classical painting',
+      texture: 'visible brushstrokes, impasto technique, rich pigment, canvas texture, glazing',
+      lighting: 'classical lighting, chiaroscuro, warm light source, atmospheric depth',
+      color: 'rich saturated colors, limited palette, harmonious colors, Old Master style',
+      negative: 'photograph, digital art, clean lines, anime, cartoon, flat colors'
+    },
+    cyberpunk: {
+      signature: 'cyberpunk aesthetic, neon-noir, high tech low life, futuristic dystopia',
+      lighting: 'neon lighting, holographic advertisements, rain-slicked streets, artificial light sources',
+      color: 'neon pink and cyan, high contrast, saturated neons against dark backgrounds',
+      elements: 'holograms, chrome, synthetic materials, wires, screens, augmented reality',
+      negative: 'natural daylight, pastoral, organic materials, low tech, historical'
+    },
+    vintage: {
+      signature: 'vintage aesthetic, analog photography, nostalgic mood, retro styling',
+      camera: 'vintage lens, Helios 44-2, swirly bokeh, film imperfections',
+      texture: 'film grain, light leaks, soft focus, vignetting, expired film look',
+      color: 'faded colors, sepia tones, cross-processing, vintage color shift',
+      negative: 'modern, sharp digital, clean, contemporary, high tech, futuristic'
+    }
+  },
 
-  // ── CHAR COUNT ─────────────────────────────────────────────────
-  const promptInput = document.getElementById('promptInput');
-  const charCount = document.getElementById('charCount');
-  promptInput.addEventListener('input', () => {
-    charCount.textContent = `${promptInput.value.length} / 1000`;
-  });
+  semanticExpansions: {
+    person: ['detailed facial features', 'expressive eyes', 'natural pose', 'authentic expression'],
+    portrait: ['sharp focus on eyes', 'catchlights', 'skin texture', 'emotional depth'],
+    landscape: ['atmospheric perspective', 'foreground interest', 'leading lines', 'natural composition'],
+    architecture: ['geometric precision', 'material texture', 'scale reference', 'ambient context'],
+    nature: ['organic textures', 'natural lighting', 'atmospheric depth', 'environmental storytelling'],
+    urban: ['architectural details', 'urban texture', 'street life', 'ambient lighting'],
+    space: ['cosmic scale', 'vast emptiness', 'celestial lighting', 'zero gravity atmosphere'],
+    underwater: ['caustic lighting', 'particulate matter', 'blue color cast', 'refraction'],
+    sunrise: ['warm golden light', 'long shadows', 'misty atmosphere', 'soft diffused illumination'],
+    noon: ['harsh shadows', 'high contrast', 'bright highlights', 'clear blue sky'],
+    sunset: ['golden hour', 'orange and pink sky', 'rim lighting', 'warm tones'],
+    night: ['artificial lighting', 'high ISO grain', 'city lights', 'moonlight', 'long exposure'],
+    rain: ['wet surfaces', 'reflections', 'atmospheric haze', 'droplets on lens'],
+    fog: ['reduced visibility', 'mysterious atmosphere', 'softened edges', 'muted colors'],
+    snow: ['high key exposure', 'cold color temperature', 'soft shadows', 'atmospheric perspective']
+  },
 
-  // ── STATE ──────────────────────────────────────────────────────
-  let lastJson = null;
-  let lastOptimized = '';
+  moods: {
+    epic: {
+      descriptors: ['grand scale', 'monumental', 'breathtaking', 'awe-inspiring', 'sweeping vista'],
+      camera: 'wide angle, low angle shot, heroic perspective',
+      lighting: 'dramatic side lighting, god rays, atmospheric grandeur'
+    },
+    mysterious: {
+      descriptors: ['enigmatic', 'shadowy', 'obscured', 'uncanny', 'hidden depths'],
+      camera: 'shallow depth of field, selective focus, obscured foreground',
+      lighting: 'chiaroscuro, partial illumination, deep shadows'
+    },
+    melancholic: {
+      descriptors: ['somber', 'contemplative', 'wistful', 'solitary', 'autumnal'],
+      camera: 'long lens compression, isolated subject, negative space',
+      lighting: 'overcast, diffused light, muted tones, soft shadows'
+    },
+    energetic: {
+      descriptors: ['dynamic', 'kinetic', 'vibrant', 'action-packed', 'high velocity'],
+      camera: 'motion blur, panning shot, wide angle distortion, dynamic angle',
+      lighting: 'high contrast, saturated colors, strobe lighting effect'
+    },
+    serene: {
+      descriptors: ['tranquil', 'peaceful', 'harmonious', 'balanced', 'zen-like'],
+      camera: 'symmetrical composition, centered subject, mirror reflection',
+      lighting: 'soft even lighting, pastel colors, minimal shadows'
+    },
+    dramatic: {
+      descriptors: ['theatrical', 'intense', 'striking', 'emotional', 'powerful'],
+      camera: 'dutch angle, extreme close-up, dramatic perspective',
+      lighting: 'high contrast, selective lighting, colored gels, dramatic shadows'
+    }
+  },
 
-  // ── OPTIMIZE ───────────────────────────────────────────────────
-  const optimizeBtn = document.getElementById('optimizeBtn');
+  qualityTiers: {
+    basic: {
+      tags: ['masterpiece', 'best quality', 'highres'],
+      score: 70
+    },
+    enhanced: {
+      tags: ['masterpiece', 'best quality', 'ultra-detailed', '8k uhd', 'hdr'],
+      score: 82
+    },
+    premium: {
+      tags: ['masterpiece', 'best quality', 'ultra highres', '8k uhd', 'hdr', 'RAW photo', 'DSLR quality'],
+      score: 90
+    },
+    maximum: {
+      tags: ['masterpiece', 'best quality', 'absurdres', '16k uhd', 'HDR+', 'professional photography', 'award winning'],
+      score: 96
+    }
+  },
 
-  optimizeBtn.addEventListener('click', async () => {
-    const raw = promptInput.value.trim();
-    if (!raw) {
-      showError('Please enter a prompt to optimize.');
+  parseInput(input) {
+    const lower = input.toLowerCase();
+    const words = lower.split(/\s+/);
+    
+    let subjectType = 'general';
+    const subjectPatterns = {
+      person: /\b(man|woman|person|child|girl|boy|portrait|face|model)\b/,
+      landscape: /\b(mountain|ocean|forest|desert|sky|field|river|lake|sunset|landscape)\b/,
+      architecture: /\b(building|house|skyscraper|bridge|interior|room|church|temple)\b/,
+      vehicle: /\b(car|spaceship|aircraft|motorcycle|boat|train)\b/,
+      animal: /\b(dog|cat|bird|horse|lion|wildlife|creature|dragon)\b/
+    };
+    
+    for (const [type, regex] of Object.entries(subjectPatterns)) {
+      if (regex.test(lower)) {
+        subjectType = type;
+        break;
+      }
+    }
+    
+    let environment = 'studio';
+    const envPatterns = {
+      outdoor: /\b(outside|outdoor|nature|forest|mountain|street|city|beach)\b/,
+      indoor: /\b(inside|indoor|room|studio|house|interior)\b/,
+      space: /\b(space|mars|moon|planet|cosmos|galaxy|stars)\b/,
+      underwater: /\b(underwater|ocean|sea|beneath|submerged)\b/
+    };
+    
+    for (const [env, regex] of Object.entries(envPatterns)) {
+      if (regex.test(lower)) {
+        environment = env;
+        break;
+      }
+    }
+    
+    let timeOfDay = 'neutral';
+    const timePatterns = {
+      morning: /\b(morning|sunrise|dawn|early)\b/,
+      noon: /\b(noon|midday|afternoon|sunny day)\b/,
+      evening: /\b(evening|sunset|dusk|twilight|golden hour)\b/,
+      night: /\b(night|midnight|dark|evening)\b/
+    };
+    
+    for (const [time, regex] of Object.entries(timePatterns)) {
+      if (regex.test(lower)) {
+        timeOfDay = time;
+        break;
+      }
+    }
+    
+    let weather = 'clear';
+    const weatherPatterns = {
+      rain: /\b(rain|rainy|wet|storm|pouring)\b/,
+      fog: /\b(fog|foggy|mist|misty|haze|hazy)\b/,
+      snow: /\b(snow|snowy|winter|blizzard|cold|freezing)\b/,
+      clouds: /\b(cloudy|overcast|clouds|gloomy)\b/
+    };
+    
+    for (const [w, regex] of Object.entries(weatherPatterns)) {
+      if (regex.test(lower)) {
+        weather = w;
+        break;
+      }
+    }
+    
+    let hasAction = /\b(running|jumping|standing|sitting|walking|flying|floating|posing|looking|holding)\b/.test(lower);
+    
+    const complexity = Math.min(100, Math.max(20, 
+      words.length * 3 + 
+      (hasAction ? 15 : 0) + 
+      (timeOfDay !== 'neutral' ? 10 : 0) +
+      (weather !== 'clear' ? 10 : 0)
+    ));
+    
+    return {
+      subjectType,
+      environment,
+      timeOfDay,
+      weather,
+      hasAction,
+      complexity,
+      wordCount: words.length,
+      raw: input
+    };
+  },
+
+  enhance(input, styleKey, moodKey, aspectRatio) {
+    const analysis = this.parseInput(input);
+    const style = this.styles[styleKey] || this.styles.photorealistic;
+    const mood = this.moods[moodKey] || this.moods.neutral;
+    
+    let qualityTier = 'basic';
+    if (analysis.complexity > 80) qualityTier = 'premium';
+    else if (analysis.complexity > 60) qualityTier = 'enhanced';
+    else if (analysis.complexity > 40) qualityTier = 'enhanced';
+    
+    let enhancedParts = [];
+    enhancedParts.push(...this.qualityTiers[qualityTier].tags);
+    enhancedParts.push(style.signature);
+    
+    let subjectExpansions = this.semanticExpansions[analysis.subjectType] || [];
+    if (analysis.subjectType === 'person' && input.toLowerCase().includes('portrait')) {
+      subjectExpansions = this.semanticExpansions.portrait;
+    }
+    
+    let coreSubject = input;
+    coreSubject = this.enrichSubject(input, mood);
+    enhancedParts.push(coreSubject);
+    
+    if (subjectExpansions.length > 0) {
+      enhancedParts.push(...subjectExpansions.slice(0, 3));
+    }
+    
+    const envExpansions = this.semanticExpansions[analysis.environment] || [];
+    if (envExpansions.length > 0) {
+      enhancedParts.push(...envExpansions.slice(0, 2));
+    }
+    
+    if (analysis.timeOfDay !== 'neutral') {
+      const timeExpansions = this.semanticExpansions[analysis.timeOfDay] || [];
+      enhancedParts.push(...timeExpansions.slice(0, 2));
+    }
+    
+    if (analysis.weather !== 'clear') {
+      const weatherExpansions = this.semanticExpansions[analysis.weather] || [];
+      enhancedParts.push(...weatherExpansions.slice(0, 2));
+    }
+    
+    enhancedParts.push(...mood.descriptors.slice(0, 2));
+    
+    let cameraType = 'default';
+    if (analysis.subjectType === 'person') cameraType = 'portrait';
+    else if (analysis.subjectType === 'landscape') cameraType = 'landscape';
+    else if (analysis.subjectType === 'architecture') cameraType = 'default';
+    
+    const camera = style.camera[cameraType] || style.camera.default;
+    enhancedParts.push(camera);
+    
+    let lightingType = 'default';
+    if (analysis.timeOfDay === 'sunset' || analysis.timeOfDay === 'sunrise') lightingType = 'golden';
+    else if (analysis.timeOfDay === 'night') lightingType = 'dramatic';
+    else if (analysis.environment === 'studio') lightingType = 'studio';
+    
+    const lighting = style.lighting[lightingType] || style.lighting.default;
+    enhancedParts.push(lighting);
+    
+    if (style.texture) enhancedParts.push(style.texture);
+    if (style.color) enhancedParts.push(style.color);
+    if (style.composition) enhancedParts.push(style.composition);
+    if (mood.camera) enhancedParts.push(mood.camera);
+    if (mood.lighting) enhancedParts.push(mood.lighting);
+    
+    const finalPrompt = [...new Set(enhancedParts)].join(', ');
+    const negativePrompt = style.negative;
+    const baseScore = this.qualityTiers[qualityTier].score;
+    const complexityBonus = Math.floor(analysis.complexity / 10);
+    const finalScore = Math.min(98, baseScore + complexityBonus);
+    const qualityTags = this.qualityTiers[qualityTier].tags;
+    
+    return {
+      prompt: finalPrompt,
+      negative_prompt: negativePrompt,
+      style: styleKey,
+      aspect_ratio: aspectRatio,
+      quality_tags: qualityTags,
+      lighting: lighting,
+      camera: camera,
+      color_grade: style.color || 'professional color grading',
+      mood: moodKey,
+      cfg_scale: 7.0,
+      steps: 30,
+      seed: null,
+      score: finalScore,
+      optimized_prompt: finalPrompt,
+      _analysis: analysis
+    };
+  },
+
+  enrichSubject(input, mood) {
+    let enriched = input
+      .replace(/\b(a|an|the)\b/gi, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    
+    const moodWords = mood.descriptors.slice(0, 2).join(', ');
+    if (!enriched.includes(moodWords.split(',')[0])) {
+      enriched = `${moodWords}, ${enriched}`;
+    }
+    
+    return enriched;
+  }
+};
+
+const UI = {
+  init() {
+    this.bindEvents();
+  },
+
+  bindEvents() {
+    document.getElementById('themeToggle').addEventListener('click', this.toggleTheme);
+    const input = document.getElementById('userInput');
+    input.addEventListener('input', this.updateComplexity.bind(this));
+    document.getElementById('enhanceBtn').addEventListener('click', this.process.bind(this));
+  },
+
+  toggleTheme() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('themeToggle').textContent = isDark ? '☀️' : '🌙';
+  },
+
+  updateComplexity() {
+    const input = document.getElementById('userInput').value;
+    const analysis = PremiumEngine.parseInput(input);
+    
+    document.getElementById('charCount').textContent = `${input.length} characters`;
+    
+    const bar = document.getElementById('complexityBar');
+    const text = document.getElementById('complexityText');
+    
+    bar.style.width = `${analysis.complexity}%`;
+    
+    if (analysis.complexity < 40) {
+      text.textContent = 'Basic';
+      bar.style.background = 'var(--text-muted)';
+    } else if (analysis.complexity < 70) {
+      text.textContent = 'Enhanced';
+      bar.style.background = 'var(--gold)';
+    } else {
+      text.textContent = 'Premium';
+      bar.style.background = 'var(--premium)';
+    }
+  },
+
+  async process() {
+    const input = document.getElementById('userInput').value.trim();
+    if (!input) {
+      alert('Please enter a description first');
       return;
     }
 
-    setLoading(true);
-    hideError();
+    const btn = document.getElementById('enhanceBtn');
+    const overlay = document.getElementById('processingOverlay');
+    
+    btn.classList.add('processing');
+    overlay.classList.add('active');
 
-    const systemPrompt = `You are an expert text-to-image prompt engineer specializing in Nano Banana 2 (NB2), a high-fidelity diffusion model. Your job is to transform a raw user idea into a precision-optimized NB2 prompt in strict JSON format.
+    await this.delay(400);
+    overlay.querySelector('.processing-text').textContent = 'Analyzing Semantics...';
+    await this.delay(400);
+    overlay.querySelector('.processing-text').textContent = 'Expanding Context...';
+    await this.delay(400);
+    overlay.querySelector('.processing-text').textContent = 'Applying Style Templates...';
+    await this.delay(400);
+    overlay.querySelector('.processing-text').textContent = 'Finalizing...';
 
-Respond ONLY with valid JSON — no markdown, no backticks, no preamble, no explanation.
+    const style = document.getElementById('primaryStyle').value;
+    const mood = document.getElementById('moodSelect').value;
+    const aspect = document.getElementById('aspectRatio').value;
 
-The JSON must have exactly these fields:
-{
-  "prompt": "highly detailed optimized positive prompt string",
-  "negative_prompt": "things to avoid, artifacts, bad quality etc.",
-  "style": "artistic style string",
-  "aspect_ratio": "16:9 | 1:1 | 9:16 | 4:3 | 3:2",
-  "quality_tags": ["tag1", "tag2", "tag3"],
-  "lighting": "lighting description",
-  "camera": "camera/lens details",
-  "color_grade": "color grading style",
-  "mood": "overall mood and atmosphere",
-  "cfg_scale": 7.5,
-  "steps": 30,
-  "seed": null,
-  "score": 87,
-  "optimized_prompt": "the single fully assembled prompt string ready to paste into NB2"
-}
+    const result = PremiumEngine.enhance(input, style, mood, aspect);
+    
+    this.renderJson(result);
+    this.renderAnalysis(result);
+    this.updateScore(result.score);
+    
+    overlay.classList.remove('active');
+    btn.classList.remove('processing');
+    
+    window.lastResult = result;
+  },
 
-Rules:
-- "prompt" must be rich, comma-separated, highly descriptive
-- "negative_prompt" must address NB2-specific artifacts
-- "score" is your quality confidence score (0-100)
-- "cfg_scale" between 5-12, "steps" between 20-50
-- Make it NB2-optimal: NB2 responds best to booru-style tags mixed with natural language
-- The style must match: ${selectedStyle}`;
+  delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  },
 
-    try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          system: systemPrompt,
-          messages: [{ role: 'user', content: `Optimize this prompt for Nano Banana 2 with style "${selectedStyle}":\n\n${raw}` }]
-        })
-      });
-
-      const data = await response.json();
-
-      if (data.error) throw new Error(data.error.message || 'API error');
-
-      const text = data.content.map(c => c.text || '').join('');
-      const clean = text.replace(/```json|```/g, '').trim();
-      const parsed = JSON.parse(clean);
-
-      lastJson = parsed;
-      lastOptimized = parsed.optimized_prompt || parsed.prompt || '';
-
-      renderJson(parsed);
-      renderFields(parsed);
-
-    } catch (err) {
-      console.error(err);
-      showError(`Error: ${err.message}. Check your connection or try again.`);
-    } finally {
-      setLoading(false);
-    }
-  });
-
-  // ── RENDER JSON ────────────────────────────────────────────────
-  function renderJson(obj) {
-    const placeholder = document.getElementById('jsonPlaceholder');
-    if (placeholder) placeholder.style.display = 'none';
-
-    const jsonStr = JSON.stringify(obj, null, 2);
-    const highlighted = syntaxHighlight(jsonStr);
-    document.getElementById('jsonOutput').innerHTML = highlighted;
-
-    // Score
-    if (obj.score) {
-      document.getElementById('scoreDisplay').style.display = 'flex';
-      document.getElementById('scoreVal').innerHTML = `${obj.score}<span>/ 100</span>`;
-    }
-  }
-
-  function syntaxHighlight(json) {
-    return json
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  renderJson(result) {
+    const output = document.getElementById('jsonOutput');
+    const cleanResult = { ...result };
+    delete cleanResult._analysis;
+    
+    const json = JSON.stringify(cleanResult, null, 2);
+    const highlighted = json
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
       .replace(/"([^"]+)":/g, '<span class="json-key">"$1"</span>:')
       .replace(/: "([^"]*)"/g, ': <span class="json-string">"$1"</span>')
       .replace(/: (\d+\.?\d*)/g, ': <span class="json-number">$1</span>')
       .replace(/: (true|false)/g, ': <span class="json-bool">$1</span>')
       .replace(/: null/g, ': <span class="json-null">null</span>');
+
+    output.innerHTML = highlighted + '<div class="processing-overlay" id="processingOverlay"><div class="processing-steps"><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot"></div></div><div class="processing-text">Engineering Prompt</div></div>';
+  },
+
+  renderAnalysis(result) {
+    const grid = document.getElementById('analysisGrid');
+    const a = result._analysis;
+    
+    const items = [
+      { label: 'Subject Type', content: a.subjectType, tags: ['Detection'] },
+      { label: 'Environment', content: a.environment, tags: ['Context'] },
+      { label: 'Time of Day', content: a.timeOfDay, tags: ['Lighting'] },
+      { label: 'Atmosphere', content: a.weather, tags: ['Mood'] },
+      { label: 'Word Count', content: `${a.wordCount} words`, tags: ['Complexity'] },
+      { label: 'Action Detected', content: a.hasAction ? 'Yes - Dynamic pose' : 'No - Static composition', tags: ['Composition'] }
+    ];
+
+    grid.innerHTML = items.map((item, i) => `
+      <div class="analysis-item" style="animation-delay: ${i * 0.1}s">
+        <div class="analysis-label">${item.label}</div>
+        <div>
+          <div class="analysis-content">${item.content}</div>
+          <div class="tag-list">
+            ${item.tags.map(t => `<span class="detail-tag">${t}</span>`).join('')}
+          </div>
+        </div>
+      </div>
+    `).join('');
+  },
+
+  updateScore(score) {
+    const circle = document.getElementById('scoreCircle');
+    const value = document.getElementById('scoreValue');
+    
+    circle.style.display = 'grid';
+    circle.style.setProperty('--score-rotation', `${(score / 100) * 360}deg`);
+    value.textContent = score;
   }
+};
 
-  // ── RENDER FIELDS ──────────────────────────────────────────────
-  function renderFields(obj) {
-    const grid = document.getElementById('fieldsGrid');
-    const statsRow = document.getElementById('statsRow');
+function copyJson() {
+  if (!window.lastResult) return;
+  const clean = { ...window.lastResult };
+  delete clean._analysis;
+  navigator.clipboard.writeText(JSON.stringify(clean, null, 2));
+  alert('JSON copied to clipboard!');
+}
 
-    // Stats
-    statsRow.style.display = 'flex';
-    statsRow.innerHTML = `
-      <div class="stat-item"><span class="stat-val">${obj.cfg_scale || '—'}</span><span class="stat-lbl">CFG Scale</span></div>
-      <div class="stat-item"><span class="stat-val">${obj.steps || '—'}</span><span class="stat-lbl">Steps</span></div>
-      <div class="stat-item"><span class="stat-val">${obj.aspect_ratio || '—'}</span><span class="stat-lbl">Ratio</span></div>
-      <div class="stat-item"><span class="stat-val">${obj.score || '—'}</span><span class="stat-lbl">Score</span></div>
-    `;
+function copyPrompt() {
+  if (!window.lastResult) return;
+  navigator.clipboard.writeText(window.lastResult.optimized_prompt);
+  alert('Final prompt copied to clipboard!');
+}
 
-    const skip = ['cfg_scale', 'steps', 'seed', 'score', 'aspect_ratio'];
-    grid.innerHTML = '';
-
-    Object.entries(obj).forEach(([key, val], i) => {
-      if (skip.includes(key)) return;
-      const card = document.createElement('div');
-      card.className = 'field-card';
-      card.style.animationDelay = `${i * 0.04}s`;
-
-      let valHtml;
-      if (Array.isArray(val)) {
-        valHtml = `<div class="field-val is-array">${val.map(v => `<span class="arr-item">${v}</span>`).join('')}</div>`;
-      } else if (val === null) {
-        valHtml = `<div class="field-val" style="color:var(--text-muted);">null</div>`;
-      } else {
-        valHtml = `<div class="field-val">${escapeHtml(String(val))}</div>`;
-      }
-
-      card.innerHTML = `<div class="field-key">${key}</div>${valHtml}`;
-      grid.appendChild(card);
-    });
-  }
-
-  function escapeHtml(s) {
-    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
-
-  // ── COPY ───────────────────────────────────────────────────────
-  function copyJson() {
-    if (!lastJson) return;
-    navigator.clipboard.writeText(JSON.stringify(lastJson, null, 2));
-    flashCopy('copyJsonBtn');
-  }
-
-  function copyFull() {
-    if (!lastOptimized) return;
-    navigator.clipboard.writeText(lastOptimized);
-    flashCopy('copyFullBtn');
-  }
-
-  function flashCopy(id) {
-    const btn = document.getElementById(id);
-    btn.classList.add('copied');
-    btn.innerHTML = '<span>✓</span> Copied!';
-    setTimeout(() => {
-      btn.classList.remove('copied');
-      btn.innerHTML = id === 'copyJsonBtn' ? '<span>⎘</span> Copy JSON' : '<span>⎘</span> Copy Prompt';
-    }, 2000);
-  }
-
-  // ── UTILS ──────────────────────────────────────────────────────
-  function setLoading(on) {
-    optimizeBtn.disabled = on;
-    optimizeBtn.classList.toggle('loading', on);
-    const btnText = optimizeBtn.querySelector('.btn-text');
-    btnText.textContent = on ? 'Optimizing' : '⚡ Optimize Prompt';
-    if (on) btnText.classList.add('loading-dots');
-    else btnText.classList.remove('loading-dots');
-  }
-
-  function showError(msg) {
-    const el = document.getElementById('errorMsg');
-    el.textContent = msg;
-    el.style.display = 'block';
-  }
-
-  function hideError() {
-    document.getElementById('errorMsg').style.display = 'none';
-  }
-</script>
-<!-- NEWSLETTER POPUP -->
-<div class="nl-overlay" id="nlOverlay">
-  <div class="nl-box">
-    <button class="nl-close" id="nlClose" title="Close">✕</button>
-    <div class="nl-eyebrow">Alix Newsletter</div>
-    <div class="nl-title">Get More <em>Value.</em></div>
-    <p class="nl-sub">Subscribe to our weekly newsletter and stay ahead — engineering tips, marketplace updates, and tools built for builders.</p>
-
-    <div id="nlForm">
-      <input class="nl-field" id="nlName" type="text" placeholder="Your name" autocomplete="name">
-      <input class="nl-field" id="nlEmail" type="email" placeholder="Your email address" autocomplete="email">
-      <button class="nl-btn" id="nlSubmit" onclick="submitNewsletter()">Subscribe →</button>
-      <div class="nl-error" id="nlError"></div>
-      <p class="nl-privacy">No spam. Unsubscribe anytime.</p>
-    </div>
-
-    <div class="nl-success" id="nlSuccess">
-      <div class="nl-success-icon">⚡</div>
-      <div class="nl-success-msg">You're in. Welcome aboard.</div>
-    </div>
-  </div>
-</div>
-
-<script>
-  // ── NEWSLETTER POPUP ───────────────────────────────────────────
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyDpc-NA-fbQRJzJe88phNmDwGcMy0kdw8HiRdHpWnG3RcNkOJDcvUXr7nV5wnBDpxC/exec';
-
-  const nlOverlay = document.getElementById('nlOverlay');
-  const nlClose   = document.getElementById('nlClose');
-
-  // Show after 8 seconds (only once per session)
-  if (!sessionStorage.getItem('nl_dismissed')) {
-    setTimeout(() => nlOverlay.classList.add('visible'), 8000);
-  }
-
-  function closePopup() {
-    nlOverlay.classList.remove('visible');
-    sessionStorage.setItem('nl_dismissed', '1');
-  }
-
-  nlClose.addEventListener('click', closePopup);
-  nlOverlay.addEventListener('click', e => { if (e.target === nlOverlay) closePopup(); });
-
-  async function submitNewsletter() {
-    const name  = document.getElementById('nlName').value.trim();
-    const email = document.getElementById('nlEmail').value.trim();
-    const errEl = document.getElementById('nlError');
-    const btn   = document.getElementById('nlSubmit');
-
-    errEl.style.display = 'none';
-
-    if (!name) { showNlError('Please enter your name.'); return; }
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      showNlError('Please enter a valid email address.');
-      return;
-    }
-
-    btn.disabled = true;
-    btn.textContent = 'Sending...';
-
-    try {
-      await fetch(SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email })
-      });
-
-      document.getElementById('nlForm').style.display = 'none';
-      document.getElementById('nlSuccess').style.display = 'block';
-      sessionStorage.setItem('nl_dismissed', '1');
-
-      setTimeout(closePopup, 3000);
-
-    } catch (err) {
-      showNlError('Something went wrong. Please try again.');
-      btn.disabled = false;
-      btn.textContent = 'Subscribe →';
-    }
-  }
-
-  function showNlError(msg) {
-    const el = document.getElementById('nlError');
-    el.textContent = msg;
-    el.style.display = 'block';
-  }
-
-  // ── FOOTER NEWSLETTER ──────────────────────────────────────────
-  async function submitFooterNewsletter() {
-    const name  = document.getElementById('footerNlName').value.trim();
-    const email = document.getElementById('footerNlEmail').value.trim();
-    const errEl = document.getElementById('footerNlError');
-    const btn   = document.getElementById('footerNlBtn');
-
-    errEl.style.display = 'none';
-
-    if (!name) { errEl.textContent = 'Please enter your name.'; errEl.style.display = 'block'; return; }
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      errEl.textContent = 'Please enter a valid email.'; errEl.style.display = 'block'; return;
-    }
-
-    btn.disabled = true;
-    btn.textContent = 'Sending...';
-
-    try {
-      await fetch(SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email })
-      });
-
-      document.getElementById('footerNlForm').style.display = 'none';
-      document.getElementById('footerNlSuccess').style.display = 'block';
-
-    } catch (err) {
-      errEl.textContent = 'Something went wrong. Try again.';
-      errEl.style.display = 'block';
-      btn.disabled = false;
-      btn.textContent = 'Subscribe →';
-    }
-  }
+UI.init();
 </script>
 
 </body>
