@@ -731,6 +731,151 @@
     border-radius: 50%;
     animation: pulse 2s ease infinite;
   }
+
+  /* NEWSLETTER POPUP */
+  .nl-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+  .nl-overlay.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .nl-box {
+    background: var(--bg2);
+    border: 1px solid var(--border-hot);
+    max-width: 440px;
+    width: calc(100% - 40px);
+    padding: 40px 36px 36px;
+    position: relative;
+    box-shadow: 0 0 60px rgba(212,164,55,0.15);
+    transform: translateY(20px);
+    transition: transform 0.4s ease;
+  }
+  .nl-overlay.visible .nl-box {
+    transform: translateY(0);
+  }
+  .nl-close {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+  }
+  .nl-close:hover { color: var(--gold); }
+  .nl-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nl-eyebrow::before {
+    content: '';
+    width: 20px;
+    height: 1px;
+    background: var(--gold);
+  }
+  .nl-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 32px;
+    line-height: 1.1;
+    color: var(--text);
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+  .nl-title em {
+    font-style: normal;
+    color: var(--gold);
+  }
+  .nl-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.7;
+    margin-bottom: 26px;
+    letter-spacing: 0.3px;
+  }
+  .nl-field {
+    width: 100%;
+    background: var(--inset);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    padding: 12px 14px;
+    outline: none;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+  }
+  .nl-field::placeholder { color: var(--text-muted); }
+  .nl-field:focus { border-color: var(--gold); }
+  .nl-btn {
+    width: 100%;
+    background: var(--gold);
+    color: #0e0e0e;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 17px;
+    letter-spacing: 2px;
+    border: none;
+    padding: 14px;
+    cursor: pointer;
+    margin-top: 4px;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .nl-btn:hover { opacity: 0.88; }
+  .nl-btn:active { transform: scale(0.98); }
+  .nl-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .nl-success {
+    display: none;
+    text-align: center;
+    padding: 20px 0 8px;
+  }
+  .nl-success-icon {
+    font-size: 36px;
+    margin-bottom: 12px;
+  }
+  .nl-success-msg {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--success);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .nl-error {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: #ff6b6b;
+    margin-top: 8px;
+    display: none;
+    letter-spacing: 1px;
+  }
+  .nl-privacy {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 14px;
+    letter-spacing: 1px;
+  }
 </style>
 </head>
 <body>
@@ -844,6 +989,36 @@
   </div>
 
 </main>
+
+<!-- NEWSLETTER FOOTER STRIP -->
+<div style="border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--bg2);">
+  <div style="max-width: 1100px; margin: 0 auto; padding: 32px 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px;">
+    <div>
+      <div style="font-family:'DM Mono',monospace; font-size:9px; letter-spacing:3px; color:var(--gold); text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+        <span style="display:inline-block; width:20px; height:1px; background:var(--gold);"></span>Weekly Newsletter
+      </div>
+      <div style="font-family:'Bebas Neue',cursive; font-size:26px; letter-spacing:1px; color:var(--text); line-height:1.1;">Get More <span style="color:var(--gold);">Value.</span></div>
+      <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--text-dim); margin-top:6px; letter-spacing:0.3px;">Subscribe to our weekly newsletter!</div>
+    </div>
+    <div id="footerNlForm" style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-start;">
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <input id="footerNlName" type="text" placeholder="Your name" autocomplete="name"
+          style="background:var(--inset); border:1px solid var(--border); color:var(--text); font-family:'DM Mono',monospace; font-size:12px; padding:10px 14px; outline:none; width:180px; transition:border-color 0.2s;"
+          onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'">
+        <input id="footerNlEmail" type="email" placeholder="Your email address" autocomplete="email"
+          style="background:var(--inset); border:1px solid var(--border); color:var(--text); font-family:'DM Mono',monospace; font-size:12px; padding:10px 14px; outline:none; width:220px; transition:border-color 0.2s;"
+          onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'">
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <button id="footerNlBtn" onclick="submitFooterNewsletter()"
+          style="background:var(--gold); color:#0e0e0e; font-family:'Bebas Neue',cursive; font-size:16px; letter-spacing:2px; border:none; padding:10px 24px; cursor:pointer; height:38px; transition:opacity 0.2s;"
+          onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Subscribe →</button>
+        <div id="footerNlError" style="font-family:'DM Mono',monospace; font-size:9px; color:#ff6b6b; display:none; letter-spacing:1px;"></div>
+      </div>
+    </div>
+    <div id="footerNlSuccess" style="display:none; font-family:'DM Mono',monospace; font-size:11px; color:var(--success); letter-spacing:2px; text-transform:uppercase;">⚡ You're in. Welcome aboard.</div>
+  </div>
+</div>
 
 <!-- FOOTER -->
 <footer style="border-top: 1px solid var(--border); padding: 28px 32px; max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
@@ -1073,5 +1248,129 @@ Rules:
     document.getElementById('errorMsg').style.display = 'none';
   }
 </script>
+<!-- NEWSLETTER POPUP -->
+<div class="nl-overlay" id="nlOverlay">
+  <div class="nl-box">
+    <button class="nl-close" id="nlClose" title="Close">✕</button>
+    <div class="nl-eyebrow">Alix Newsletter</div>
+    <div class="nl-title">Get More <em>Value.</em></div>
+    <p class="nl-sub">Subscribe to our weekly newsletter and stay ahead — engineering tips, marketplace updates, and tools built for builders.</p>
+
+    <div id="nlForm">
+      <input class="nl-field" id="nlName" type="text" placeholder="Your name" autocomplete="name">
+      <input class="nl-field" id="nlEmail" type="email" placeholder="Your email address" autocomplete="email">
+      <button class="nl-btn" id="nlSubmit" onclick="submitNewsletter()">Subscribe →</button>
+      <div class="nl-error" id="nlError"></div>
+      <p class="nl-privacy">No spam. Unsubscribe anytime.</p>
+    </div>
+
+    <div class="nl-success" id="nlSuccess">
+      <div class="nl-success-icon">⚡</div>
+      <div class="nl-success-msg">You're in. Welcome aboard.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── NEWSLETTER POPUP ───────────────────────────────────────────
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyDpc-NA-fbQRJzJe88phNmDwGcMy0kdw8HiRdHpWnG3RcNkOJDcvUXr7nV5wnBDpxC/exec';
+
+  const nlOverlay = document.getElementById('nlOverlay');
+  const nlClose   = document.getElementById('nlClose');
+
+  // Show after 8 seconds (only once per session)
+  if (!sessionStorage.getItem('nl_dismissed')) {
+    setTimeout(() => nlOverlay.classList.add('visible'), 8000);
+  }
+
+  function closePopup() {
+    nlOverlay.classList.remove('visible');
+    sessionStorage.setItem('nl_dismissed', '1');
+  }
+
+  nlClose.addEventListener('click', closePopup);
+  nlOverlay.addEventListener('click', e => { if (e.target === nlOverlay) closePopup(); });
+
+  async function submitNewsletter() {
+    const name  = document.getElementById('nlName').value.trim();
+    const email = document.getElementById('nlEmail').value.trim();
+    const errEl = document.getElementById('nlError');
+    const btn   = document.getElementById('nlSubmit');
+
+    errEl.style.display = 'none';
+
+    if (!name) { showNlError('Please enter your name.'); return; }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showNlError('Please enter a valid email address.');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email })
+      });
+
+      document.getElementById('nlForm').style.display = 'none';
+      document.getElementById('nlSuccess').style.display = 'block';
+      sessionStorage.setItem('nl_dismissed', '1');
+
+      setTimeout(closePopup, 3000);
+
+    } catch (err) {
+      showNlError('Something went wrong. Please try again.');
+      btn.disabled = false;
+      btn.textContent = 'Subscribe →';
+    }
+  }
+
+  function showNlError(msg) {
+    const el = document.getElementById('nlError');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+
+  // ── FOOTER NEWSLETTER ──────────────────────────────────────────
+  async function submitFooterNewsletter() {
+    const name  = document.getElementById('footerNlName').value.trim();
+    const email = document.getElementById('footerNlEmail').value.trim();
+    const errEl = document.getElementById('footerNlError');
+    const btn   = document.getElementById('footerNlBtn');
+
+    errEl.style.display = 'none';
+
+    if (!name) { errEl.textContent = 'Please enter your name.'; errEl.style.display = 'block'; return; }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errEl.textContent = 'Please enter a valid email.'; errEl.style.display = 'block'; return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email })
+      });
+
+      document.getElementById('footerNlForm').style.display = 'none';
+      document.getElementById('footerNlSuccess').style.display = 'block';
+
+    } catch (err) {
+      errEl.textContent = 'Something went wrong. Try again.';
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Subscribe →';
+    }
+  }
+</script>
+
 </body>
 </html>
